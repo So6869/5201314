@@ -315,6 +315,50 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
         
+        .about-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .about-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+        }
+        
+        .about-title {
+            flex: 1;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+        
+        .about-content ul {
+            list-style-type: none;
+        }
+        
+        .about-content li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            position: relative;
+        }
+        
+        .about-content li:before {
+            content: '•';
+            color: var(--primary-blue);
+            position: absolute;
+            left: -10px;
+            font-size: 1.2rem;
+        }
+        
         /* 纪念日样式 - 改进版 */
         #milestones {
             display: none;
@@ -552,6 +596,153 @@
         .btn-primary:hover {
             background-color: var(--accent-color);
         }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(137, 207, 240, 0.2);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+        }
+        
+        .modal-btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .modal-btn-secondary {
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .modal-btn-secondary:hover {
+            background-color: #ddd;
+        }
+        
+        /* 通知样式 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            background-color: #51cf66;
+        }
+        
+        .notification-error {
+            background-color: #ff6b6b;
+        }
     </style>
 </head>
 <body>
@@ -566,8 +757,7 @@
             <input type="password" class="password-input" id="password-input" placeholder="请输入密码" autocomplete="off">
             <button class="password-btn" id="password-submit">进入我们的空间</button>
             <div class="password-error" id="password-error">密码错误，请重新输入</div>
-            <!-- 修改了密码提示 -->
-            <p style="font-size: 0.9rem; color: #777; margin-top: 20px;">提示：密码是我们相遇以及在一起的日子（250406250527）</p>
+            <p style="font-size: 0.9rem; color: #777; margin-top: 20px;">提示：密码是我们相遇和在一起的日子</p>
         </div>
     </div>
     
@@ -641,92 +831,8 @@
                     </button>
                 </h2>
                 
-                <div class="about-container">
-                    <div class="about-card">
-                        <div class="about-header">
-                            <div class="about-icon">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <h3 class="about-title">基本信息</h3>
-                            <button class="edit-btn edit-about-card" data-card="basic">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="about-content">
-                            <ul>
-                                <li><strong>生日：</strong>2003年4月23日</li>
-                                <li><strong>家乡：</strong>江西赣州</li>
-                                <li><strong>称呼：</strong>芬、冷、饭饭</li>
-                                <li><strong>饮食习惯：</strong>家里准时准点吃饭（中午12点，晚上18点）</li>
-                                <li><strong>天气偏好：</strong>喜欢多云，不喜欢下雨天（泥土的味道）</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="about-card">
-                        <div class="about-header">
-                            <div class="about-icon">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <h3 class="about-title">她的喜好</h3>
-                            <button class="edit-btn edit-about-card" data-card="likes">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="about-content">
-                            <ul>
-                                <li><strong>明星：</strong>白鹿、肖战</li>
-                                <li><strong>喜欢的茶：</strong>古茗的云岭茉莉白</li>
-                                <li><strong>最喜欢的食物：</strong>螺蛳粉</li>
-                                <li><strong>想去的地方：</strong>海边</li>
-                                <li><strong>性格偏好：</strong>喜欢偏执，只要一人；喜欢需要；喜欢在乎；喜欢独一无二</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="about-card">
-                        <div class="about-header">
-                            <div class="about-icon">
-                                <i class="fas fa-thumbs-down"></i>
-                            </div>
-                            <h3 class="about-title">她的不喜欢</h3>
-                            <button class="edit-btn edit-about-card" data-card="dislikes">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="about-content">
-                            <ul>
-                                <li><strong>影视题材：</strong>不喜欢骨科题材</li>
-                                <li><strong>感情上：</strong>不喜欢精神出轨</li>
-                                <li><strong>食物：</strong>不喜欢吃太甜的</li>
-                                <li><strong>肉类：</strong>不喜欢吃肉</li>
-                                <li><strong>节日食物：</strong>不喜欢月饼</li>
-                                <li><strong>蔬菜：</strong>不喜欢生的番茄</li>
-                                <li><strong>早餐：</strong>几乎不吃早餐</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="about-card">
-                        <div class="about-header">
-                            <div class="about-icon">
-                                <i class="fas fa-history"></i>
-                            </div>
-                            <h3 class="about-title">我们的故事</h3>
-                            <button class="edit-btn edit-about-card" data-card="story">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        <div class="about-content">
-                            <div style="padding: 15px;">
-                                <h4 style="color: var(--primary-blue); margin-bottom: 10px;">初遇：2025年4月6日 (250406)</h4>
-                                <p style="margin-bottom: 15px;">游戏中相识，她叫"茶泡饭"，我以为她是说茶不一样要贵点，没想到是自我介绍。</p>
-                                
-                                <h4 style="color: var(--primary-blue); margin-bottom: 10px;">在一起：2025年5月27日 (250527)</h4>
-                                <p>我们正式成为彼此的唯一天。</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="about-container" id="about-her-container">
+                    <!-- 关于她卡片将通过JS动态生成 -->
                 </div>
                 
                 <div style="text-align: center; margin-top: 30px;">
@@ -767,6 +873,31 @@
             </div>
         </footer>
     </div>
+    
+    <!-- 编辑模态框 -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">编辑内容</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                    <!-- 表单内容将根据编辑的内容动态生成 -->
+                </form>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="cancel-edit">取消</button>
+                <button class="modal-btn modal-btn-primary" id="save-edit">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 通知 -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">保存成功</span>
+    </div>
 
     <script>
         // 创建浮动爱心
@@ -784,53 +915,208 @@
             }
         }
         
-        // 纪念日数据 - 包含详细计时信息
-        const milestonesData = [
-            {
-                id: 1,
-                title: "在一起纪念日",
-                description: "我们成为彼此的唯一",
-                date: "2025-05-27",
-                icon: "fas fa-heart",
-                type: "anniversary", // 纪念日类型
-                repeatYearly: true, // 每年重复
-                countUp: true, // 显示正计时
-                countDown: true // 显示倒计时
+        // 本地存储管理
+        const StorageManager = {
+            // 检查是否有存储的数据
+            hasStoredData: function(key) {
+                return localStorage.getItem(key) !== null;
             },
-            {
-                id: 2,
-                title: "芬的生日",
-                description: "祝我的宝贝生日快乐",
-                date: "2003-04-23",
-                icon: "fas fa-birthday-cake",
-                type: "birthday",
-                repeatYearly: true,
-                countUp: true, // 显示年龄
-                countDown: true // 显示距离下一个生日
+            
+            // 获取存储的数据
+            getStoredData: function(key, defaultValue = null) {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : defaultValue;
             },
-            {
-                id: 3,
-                title: "初遇纪念日",
-                description: "茶泡饭与南書的相遇",
-                date: "2025-04-06",
-                icon: "fas fa-gamepad",
-                type: "anniversary",
-                repeatYearly: true,
-                countUp: true,
-                countDown: true
+            
+            // 保存数据到本地存储
+            saveData: function(key, data) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(data));
+                    return true;
+                } catch (e) {
+                    console.error('保存数据失败:', e);
+                    // 如果存储空间不足，尝试清理一些旧数据
+                    this.clearOldData();
+                    // 再次尝试保存
+                    try {
+                        localStorage.setItem(key, JSON.stringify(data));
+                        return true;
+                    } catch (e2) {
+                        console.error('再次保存数据失败:', e2);
+                        return false;
+                    }
+                }
             },
-            {
-                id: 4,
-                title: "第一个情人节",
-                description: "我们的第一个情人节",
-                date: "2025-02-14",
-                icon: "fas fa-kiss-wink-heart",
-                type: "anniversary",
-                repeatYearly: true,
-                countUp: true,
-                countDown: true
+            
+            // 清理旧数据（如果需要）
+            clearOldData: function() {
+                // 这里可以根据需要实现清理逻辑
+                // 例如：清理一些临时数据或不太重要的数据
+            },
+            
+            // 清空所有数据
+            clearAllData: function() {
+                localStorage.clear();
             }
-        ];
+        };
+        
+        // 默认数据
+        const defaultData = {
+            home: {
+                coupleName: "芬 ❤️ 萌",
+                tagline: "这里记录着我们每一个甜蜜瞬间，从相遇、相知到相爱，每一个回忆都值得珍藏。这是我们专属的小天地，只属于我们两个人的故事。",
+                photos: [
+                    {
+                        src: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80",
+                        caption: "第一次旅行",
+                        date: "2023年5月 · 海边"
+                    },
+                    {
+                        src: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
+                        caption: "周年纪念日",
+                        date: "2023年8月 · 餐厅"
+                    },
+                    {
+                        src: "https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80",
+                        caption: "日常甜蜜",
+                        date: "2023年10月 · 家中"
+                    }
+                ]
+            },
+            
+            aboutHer: {
+                title: "关于她",
+                cards: [
+                    {
+                        id: 1,
+                        title: "基本信息",
+                        icon: "fas fa-user",
+                        items: [
+                            "生日：2003年4月23日",
+                            "家乡：江西赣州",
+                            "称呼：芬、冷、饭饭",
+                            "饮食习惯：家里准时准点吃饭（中午12点，晚上18点）",
+                            "天气偏好：喜欢多云，不喜欢下雨天（泥土的味道）"
+                        ]
+                    },
+                    {
+                        id: 2,
+                        title: "她的喜好",
+                        icon: "fas fa-heart",
+                        items: [
+                            "明星：白鹿、肖战",
+                            "喜欢的茶：古茗的云岭茉莉白",
+                            "最喜欢的食物：螺蛳粉",
+                            "想去的地方：海边",
+                            "性格偏好：喜欢偏执，只要一人；喜欢需要；喜欢在乎；喜欢独一无二"
+                        ]
+                    },
+                    {
+                        id: 3,
+                        title: "她的不喜欢",
+                        icon: "fas fa-thumbs-down",
+                        items: [
+                            "影视题材：不喜欢骨科题材",
+                            "感情上：不喜欢精神出轨",
+                            "食物：不喜欢吃太甜的",
+                            "肉类：不喜欢吃肉",
+                            "节日食物：不喜欢月饼",
+                            "蔬菜：不喜欢生的番茄",
+                            "早餐：几乎不吃早餐"
+                        ]
+                    },
+                    {
+                        id: 4,
+                        title: "我们的故事",
+                        icon: "fas fa-history",
+                        items: [
+                            "初遇：2025年4月6日 - 游戏中相识，她叫'茶泡饭'，我以为她是说茶不一样要贵点，没想到是自我介绍。",
+                            "在一起：2025年5月27日 - 我们正式成为彼此的唯一天。"
+                        ]
+                    }
+                ]
+            },
+            
+            milestones: {
+                title: "纪念日",
+                items: [
+                    {
+                        id: 1,
+                        title: "在一起纪念日",
+                        description: "我们成为彼此的唯一",
+                        date: "2025-05-27",
+                        icon: "fas fa-heart",
+                        type: "anniversary",
+                        repeatYearly: true,
+                        countUp: true,
+                        countDown: true
+                    },
+                    {
+                        id: 2,
+                        title: "芬的生日",
+                        description: "祝我的宝贝生日快乐",
+                        date: "2003-04-23",
+                        icon: "fas fa-birthday-cake",
+                        type: "birthday",
+                        repeatYearly: true,
+                        countUp: true,
+                        countDown: true
+                    },
+                    {
+                        id: 3,
+                        title: "初遇纪念日",
+                        description: "茶泡饭与南書的相遇",
+                        date: "2025-04-06",
+                        icon: "fas fa-gamepad",
+                        type: "anniversary",
+                        repeatYearly: true,
+                        countUp: true,
+                        countDown: true
+                    },
+                    {
+                        id: 4,
+                        title: "第一个情人节",
+                        description: "我们的第一个情人节",
+                        date: "2025-02-14",
+                        icon: "fas fa-kiss-wink-heart",
+                        type: "anniversary",
+                        repeatYearly: true,
+                        countUp: true,
+                        countDown: true
+                    }
+                ]
+            },
+            
+            footer: {
+                text1: "© 2025 我们的甜蜜空间 | 专属于 <span class='heartbeat'>芬与萌</span> 的爱情小窝",
+                text2: "\"我的茶一杯500，但对你免费\" ❤️ \"我好友位收费，但对你例外\""
+            }
+        };
+        
+        // 应用数据
+        let appData = {
+            home: null,
+            aboutHer: null,
+            milestones: null,
+            footer: null
+        };
+        
+        // 初始化应用数据
+        function initAppData() {
+            // 尝试从本地存储加载数据
+            appData.home = StorageManager.getStoredData('sweetSpace_home', defaultData.home);
+            appData.aboutHer = StorageManager.getStoredData('sweetSpace_aboutHer', defaultData.aboutHer);
+            appData.milestones = StorageManager.getStoredData('sweetSpace_milestones', defaultData.milestones);
+            appData.footer = StorageManager.getStoredData('sweetSpace_footer', defaultData.footer);
+        }
+        
+        // 保存应用数据
+        function saveAppData() {
+            StorageManager.saveData('sweetSpace_home', appData.home);
+            StorageManager.saveData('sweetSpace_aboutHer', appData.aboutHer);
+            StorageManager.saveData('sweetSpace_milestones', appData.milestones);
+            StorageManager.saveData('sweetSpace_footer', appData.footer);
+        }
         
         // 计算时间差
         function calculateTimeDifference(targetDate, isBirthday = false) {
@@ -1001,7 +1287,7 @@
             
             milestoneCards.forEach(card => {
                 const milestoneId = parseInt(card.dataset.id);
-                const milestone = milestonesData.find(m => m.id === milestoneId);
+                const milestone = appData.milestones.items.find(m => m.id === milestoneId);
                 
                 if (milestone) {
                     const isBirthday = milestone.type === "birthday";
@@ -1057,14 +1343,14 @@
             container.innerHTML = '';
             
             // 按日期排序（最近的要到来的在前面）
-            milestonesData.sort((a, b) => {
+            appData.milestones.items.sort((a, b) => {
                 const aTime = calculateTimeDifference(a.date, a.type === "birthday").totalMs;
                 const bTime = calculateTimeDifference(b.date, b.type === "birthday").totalMs;
                 return aTime - bTime;
             });
             
             // 生成卡片
-            milestonesData.forEach(milestone => {
+            appData.milestones.items.forEach(milestone => {
                 const card = generateMilestoneCard(milestone);
                 container.appendChild(card);
             });
@@ -1073,7 +1359,7 @@
             document.querySelectorAll('.edit-milestone').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const milestoneId = parseInt(this.dataset.id);
-                    editMilestone(milestoneId);
+                    openEditMilestoneModal(milestoneId);
                 });
             });
             
@@ -1085,71 +1371,571 @@
                     }
                 });
             });
-            
-            // 添加纪念日按钮
-            document.getElementById('add-milestone-btn').addEventListener('click', addNewMilestone);
         }
         
         // 编辑纪念日
-        function editMilestone(milestoneId) {
-            const milestone = milestonesData.find(m => m.id === milestoneId);
-            if (!milestone) return;
+        function openEditMilestoneModal(milestoneId) {
+            const milestone = milestoneId ? 
+                appData.milestones.items.find(m => m.id === milestoneId) : 
+                {
+                    id: appData.milestones.items.length > 0 ? Math.max(...appData.milestones.items.map(m => m.id)) + 1 : 1,
+                    title: "",
+                    description: "",
+                    date: "",
+                    icon: "fas fa-heart",
+                    type: "anniversary",
+                    repeatYearly: true,
+                    countUp: true,
+                    countDown: true
+                };
             
-            const newTitle = prompt('修改纪念日标题:', milestone.title);
-            if (newTitle !== null) {
-                milestone.title = newTitle;
-            }
+            const isNew = !milestoneId;
             
-            const newDate = prompt('修改日期 (YYYY-MM-DD):', milestone.date);
-            if (newDate !== null && newDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                milestone.date = newDate;
-            }
+            // 设置模态框标题
+            document.getElementById('modal-title').textContent = isNew ? '添加纪念日' : '编辑纪念日';
             
-            const newDesc = prompt('修改描述:', milestone.description);
-            if (newDesc !== null) {
-                milestone.description = newDesc;
-            }
+            // 生成表单
+            const form = document.getElementById('edit-form');
+            form.innerHTML = `
+                <div class="form-group">
+                    <label for="edit-title">纪念日标题</label>
+                    <input type="text" id="edit-title" class="form-control" value="${milestone.title}" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-description">描述</label>
+                    <textarea id="edit-description" class="form-control" rows="3">${milestone.description}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-date">日期 (YYYY-MM-DD)</label>
+                    <input type="text" id="edit-date" class="form-control" value="${milestone.date}" placeholder="2025-05-27" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-type">类型</label>
+                    <select id="edit-type" class="form-control">
+                        <option value="anniversary" ${milestone.type === 'anniversary' ? 'selected' : ''}>纪念日</option>
+                        <option value="birthday" ${milestone.type === 'birthday' ? 'selected' : ''}>生日</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-icon">图标</label>
+                    <select id="edit-icon" class="form-control">
+                        <option value="fas fa-heart" ${milestone.icon === 'fas fa-heart' ? 'selected' : ''}>爱心</option>
+                        <option value="fas fa-birthday-cake" ${milestone.icon === 'fas fa-birthday-cake' ? 'selected' : ''}>生日蛋糕</option>
+                        <option value="fas fa-gamepad" ${milestone.icon === 'fas fa-gamepad' ? 'selected' : ''}>游戏手柄</option>
+                        <option value="fas fa-kiss-wink-heart" ${milestone.icon === 'fas fa-kiss-wink-heart' ? 'selected' : ''}>亲吻</option>
+                        <option value="fas fa-calendar" ${milestone.icon === 'fas fa-calendar' ? 'selected' : ''}>日历</option>
+                        <option value="fas fa-gift" ${milestone.icon === 'fas fa-gift' ? 'selected' : ''}>礼物</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="edit-repeat" ${milestone.repeatYearly ? 'checked' : ''}>
+                        <label for="edit-repeat">每年重复</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="edit-countup" ${milestone.countUp ? 'checked' : ''}>
+                        <label for="edit-countup">显示正计时</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="edit-countdown" ${milestone.countDown ? 'checked' : ''}>
+                        <label for="edit-countdown">显示倒计时</label>
+                    </div>
+                </div>
+                <input type="hidden" id="edit-id" value="${milestone.id}">
+            `;
             
-            initMilestones();
+            // 显示模态框
+            document.getElementById('edit-modal').style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('save-edit').onclick = function() {
+                const editedMilestone = {
+                    id: parseInt(document.getElementById('edit-id').value),
+                    title: document.getElementById('edit-title').value,
+                    description: document.getElementById('edit-description').value,
+                    date: document.getElementById('edit-date').value,
+                    icon: document.getElementById('edit-icon').value,
+                    type: document.getElementById('edit-type').value,
+                    repeatYearly: document.getElementById('edit-repeat').checked,
+                    countUp: document.getElementById('edit-countup').checked,
+                    countDown: document.getElementById('edit-countdown').checked
+                };
+                
+                if (!editedMilestone.title || !editedMilestone.date) {
+                    showNotification('标题和日期不能为空', 'error');
+                    return;
+                }
+                
+                if (!editedMilestone.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    showNotification('日期格式不正确，请输入 YYYY-MM-DD 格式', 'error');
+                    return;
+                }
+                
+                if (isNew) {
+                    appData.milestones.items.push(editedMilestone);
+                } else {
+                    const index = appData.milestones.items.findIndex(m => m.id === milestoneId);
+                    if (index !== -1) {
+                        appData.milestones.items[index] = editedMilestone;
+                    }
+                }
+                
+                saveAppData();
+                initMilestones();
+                closeModal();
+                showNotification(isNew ? '纪念日添加成功' : '纪念日修改成功');
+            };
         }
         
         // 删除纪念日
         function deleteMilestone(milestoneId) {
-            const index = milestonesData.findIndex(m => m.id === milestoneId);
+            const index = appData.milestones.items.findIndex(m => m.id === milestoneId);
             if (index !== -1) {
-                milestonesData.splice(index, 1);
+                appData.milestones.items.splice(index, 1);
+                saveAppData();
                 initMilestones();
+                showNotification('纪念日删除成功');
             }
         }
         
-        // 添加新纪念日
-        function addNewMilestone() {
-            const title = prompt('输入纪念日标题:');
-            if (!title) return;
+        // 生成关于她卡片
+        function generateAboutCard(cardData) {
+            const card = document.createElement('div');
+            card.className = 'about-card';
+            card.dataset.id = cardData.id;
             
-            const date = prompt('输入日期 (YYYY-MM-DD):');
-            if (!date || !date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                alert('日期格式不正确，请输入 YYYY-MM-DD 格式');
-                return;
-            }
-            
-            const description = prompt('输入描述:') || '';
-            
-            const newId = milestonesData.length > 0 ? Math.max(...milestonesData.map(m => m.id)) + 1 : 1;
-            
-            milestonesData.push({
-                id: newId,
-                title: title,
-                description: description,
-                date: date,
-                icon: "fas fa-heart",
-                type: "anniversary",
-                repeatYearly: true,
-                countUp: true,
-                countDown: true
+            let itemsHTML = '';
+            cardData.items.forEach(item => {
+                itemsHTML += `<li>${item}</li>`;
             });
             
-            initMilestones();
+            card.innerHTML = `
+                <div class="about-header">
+                    <div class="about-icon">
+                        <i class="${cardData.icon}"></i>
+                    </div>
+                    <h3 class="about-title">${cardData.title}</h3>
+                    <button class="edit-btn edit-about-card" data-id="${cardData.id}" title="编辑卡片">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="edit-btn delete-about-card" data-id="${cardData.id}" title="删除卡片" style="color: #ff6b6b;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="about-content">
+                    <ul>${itemsHTML}</ul>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // 初始化关于她
+        function initAboutHer() {
+            const container = document.getElementById('about-her-container');
+            container.innerHTML = '';
+            
+            // 更新标题
+            document.querySelector('#about-her .section-title').childNodes[0].textContent = appData.aboutHer.title;
+            
+            // 生成卡片
+            appData.aboutHer.cards.forEach(cardData => {
+                const card = generateAboutCard(cardData);
+                container.appendChild(card);
+            });
+            
+            // 添加事件监听
+            document.querySelectorAll('.edit-about-card').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cardId = parseInt(this.dataset.id);
+                    openEditAboutCardModal(cardId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-about-card').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cardId = parseInt(this.dataset.id);
+                    if (confirm('确定要删除这个卡片吗？')) {
+                        deleteAboutCard(cardId);
+                    }
+                });
+            });
+        }
+        
+        // 编辑关于她卡片
+        function openEditAboutCardModal(cardId) {
+            const card = cardId ? 
+                appData.aboutHer.cards.find(c => c.id === cardId) : 
+                {
+                    id: appData.aboutHer.cards.length > 0 ? Math.max(...appData.aboutHer.cards.map(c => c.id)) + 1 : 1,
+                    title: "",
+                    icon: "fas fa-heart",
+                    items: [""]
+                };
+            
+            const isNew = !cardId;
+            
+            // 设置模态框标题
+            document.getElementById('modal-title').textContent = isNew ? '添加卡片' : '编辑卡片';
+            
+            // 生成项目字段
+            let itemsFields = '';
+            card.items.forEach((item, index) => {
+                itemsFields += `
+                    <div class="form-group item-group">
+                        <label for="edit-item-${index}">项目 ${index + 1}</label>
+                        <input type="text" id="edit-item-${index}" class="form-control item-input" value="${item}">
+                        ${index > 0 ? '<button type="button" class="edit-btn remove-item" data-index="' + index + '" style="margin-top: 5px;">删除此项</button>' : ''}
+                    </div>
+                `;
+            });
+            
+            // 生成表单
+            const form = document.getElementById('edit-form');
+            form.innerHTML = `
+                <div class="form-group">
+                    <label for="edit-card-title">卡片标题</label>
+                    <input type="text" id="edit-card-title" class="form-control" value="${card.title}" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-card-icon">图标</label>
+                    <select id="edit-card-icon" class="form-control">
+                        <option value="fas fa-user" ${card.icon === 'fas fa-user' ? 'selected' : ''}>用户</option>
+                        <option value="fas fa-heart" ${card.icon === 'fas fa-heart' ? 'selected' : ''}>爱心</option>
+                        <option value="fas fa-thumbs-down" ${card.icon === 'fas fa-thumbs-down' ? 'selected' : ''}>不喜欢</option>
+                        <option value="fas fa-history" ${card.icon === 'fas fa-history' ? 'selected' : ''}>历史</option>
+                        <option value="fas fa-star" ${card.icon === 'fas fa-star' ? 'selected' : ''}>星星</option>
+                        <option value="fas fa-music" ${card.icon === 'fas fa-music' ? 'selected' : ''}>音乐</option>
+                        <option value="fas fa-film" ${card.icon === 'fas fa-film' ? 'selected' : ''}>电影</option>
+                        <option value="fas fa-utensils" ${card.icon === 'fas fa-utensils' ? 'selected' : ''}>餐具</option>
+                    </select>
+                </div>
+                <div id="items-container">
+                    ${itemsFields}
+                </div>
+                <div style="margin-top: 15px;">
+                    <button type="button" class="btn btn-primary" id="add-item-btn">
+                        <i class="fas fa-plus"></i> 添加项目
+                    </button>
+                </div>
+                <input type="hidden" id="edit-card-id" value="${card.id}">
+            `;
+            
+            // 显示模态框
+            document.getElementById('edit-modal').style.display = 'flex';
+            
+            // 添加项目按钮事件
+            document.getElementById('add-item-btn').onclick = function() {
+                const container = document.getElementById('items-container');
+                const index = container.querySelectorAll('.item-group').length;
+                
+                const newItem = document.createElement('div');
+                newItem.className = 'form-group item-group';
+                newItem.innerHTML = `
+                    <label for="edit-item-${index}">项目 ${index + 1}</label>
+                    <input type="text" id="edit-item-${index}" class="form-control item-input" value="">
+                    <button type="button" class="edit-btn remove-item" data-index="${index}" style="margin-top: 5px;">删除此项</button>
+                `;
+                
+                container.appendChild(newItem);
+                
+                // 重新绑定删除按钮事件
+                newItem.querySelector('.remove-item').addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            };
+            
+            // 绑定现有的删除按钮事件
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            });
+            
+            // 保存按钮事件
+            document.getElementById('save-edit').onclick = function() {
+                const title = document.getElementById('edit-card-title').value;
+                const icon = document.getElementById('edit-card-icon').value;
+                
+                // 收集所有项目
+                const items = [];
+                document.querySelectorAll('.item-input').forEach(input => {
+                    if (input.value.trim() !== '') {
+                        items.push(input.value);
+                    }
+                });
+                
+                if (!title || items.length === 0) {
+                    showNotification('标题和至少一个项目是必需的', 'error');
+                    return;
+                }
+                
+                const editedCard = {
+                    id: parseInt(document.getElementById('edit-card-id').value),
+                    title: title,
+                    icon: icon,
+                    items: items
+                };
+                
+                if (isNew) {
+                    appData.aboutHer.cards.push(editedCard);
+                } else {
+                    const index = appData.aboutHer.cards.findIndex(c => c.id === cardId);
+                    if (index !== -1) {
+                        appData.aboutHer.cards[index] = editedCard;
+                    }
+                }
+                
+                saveAppData();
+                initAboutHer();
+                closeModal();
+                showNotification(isNew ? '卡片添加成功' : '卡片修改成功');
+            };
+        }
+        
+        // 删除关于她卡片
+        function deleteAboutCard(cardId) {
+            const index = appData.aboutHer.cards.findIndex(c => c.id === cardId);
+            if (index !== -1) {
+                appData.aboutHer.cards.splice(index, 1);
+                saveAppData();
+                initAboutHer();
+                showNotification('卡片删除成功');
+            }
+        }
+        
+        // 初始化首页
+        function initHome() {
+            // 更新情侣名称
+            document.querySelector('.couple-name').textContent = appData.home.coupleName;
+            
+            // 更新描述
+            document.querySelector('.tagline').textContent = appData.home.tagline;
+            
+            // 更新图片
+            const photoGallery = document.querySelector('.photo-gallery');
+            photoGallery.innerHTML = '';
+            
+            appData.home.photos.forEach((photo, index) => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                photoItem.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.caption}">
+                    <div class="photo-caption">
+                        <h3>${photo.caption}</h3>
+                        <p>${photo.date}</p>
+                    </div>
+                `;
+                photoGallery.appendChild(photoItem);
+            });
+        }
+        
+        // 初始化底部
+        function initFooter() {
+            const footerContent = document.querySelector('.footer-content');
+            footerContent.innerHTML = `
+                <p>${appData.footer.text1}</p>
+                <p>${appData.footer.text2}</p>
+                <button class="edit-btn" id="edit-footer" style="color: white;" title="编辑底部文字">
+                    <i class="fas fa-edit"></i> 编辑
+                </button>
+            `;
+            
+            // 重新绑定编辑按钮事件
+            document.getElementById('edit-footer').addEventListener('click', openEditFooterModal);
+        }
+        
+        // 编辑首页
+        function openEditHomeModal() {
+            // 设置模态框标题
+            document.getElementById('modal-title').textContent = '编辑首页内容';
+            
+            // 生成表单
+            const form = document.getElementById('edit-form');
+            form.innerHTML = `
+                <div class="form-group">
+                    <label for="edit-couple-name">情侣名称</label>
+                    <input type="text" id="edit-couple-name" class="form-control" value="${appData.home.coupleName}" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-tagline">首页描述</label>
+                    <textarea id="edit-tagline" class="form-control" rows="4">${appData.home.tagline}</textarea>
+                </div>
+                <h4 style="margin: 20px 0 10px; color: var(--dark-color);">照片编辑</h4>
+                <div id="photos-container">
+                    ${appData.home.photos.map((photo, index) => `
+                        <div class="form-group photo-group" data-index="${index}">
+                            <label>照片 ${index + 1}</label>
+                            <input type="text" class="form-control photo-url" value="${photo.src}" placeholder="图片链接" style="margin-bottom: 8px;">
+                            <input type="text" class="form-control photo-caption" value="${photo.caption}" placeholder="标题" style="margin-bottom: 8px;">
+                            <input type="text" class="form-control photo-date" value="${photo.date}" placeholder="日期">
+                            ${index > 0 ? '<button type="button" class="edit-btn remove-photo" style="margin-top: 5px;">删除此照片</button>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 15px;">
+                    <button type="button" class="btn btn-primary" id="add-photo-btn">
+                        <i class="fas fa-plus"></i> 添加照片
+                    </button>
+                </div>
+            `;
+            
+            // 显示模态框
+            document.getElementById('edit-modal').style.display = 'flex';
+            
+            // 添加照片按钮事件
+            document.getElementById('add-photo-btn').onclick = function() {
+                const container = document.getElementById('photos-container');
+                const index = container.querySelectorAll('.photo-group').length;
+                
+                const newPhoto = document.createElement('div');
+                newPhoto.className = 'form-group photo-group';
+                newPhoto.dataset.index = index;
+                newPhoto.innerHTML = `
+                    <label>照片 ${index + 1}</label>
+                    <input type="text" class="form-control photo-url" value="" placeholder="图片链接" style="margin-bottom: 8px;">
+                    <input type="text" class="form-control photo-caption" value="" placeholder="标题" style="margin-bottom: 8px;">
+                    <input type="text" class="form-control photo-date" value="" placeholder="日期">
+                    <button type="button" class="edit-btn remove-photo" style="margin-top: 5px;">删除此照片</button>
+                `;
+                
+                container.appendChild(newPhoto);
+                
+                // 绑定删除按钮事件
+                newPhoto.querySelector('.remove-photo').addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            };
+            
+            // 绑定现有的删除按钮事件
+            document.querySelectorAll('.remove-photo').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            });
+            
+            // 保存按钮事件
+            document.getElementById('save-edit').onclick = function() {
+                const coupleName = document.getElementById('edit-couple-name').value;
+                const tagline = document.getElementById('edit-tagline').value;
+                
+                // 收集所有照片
+                const photos = [];
+                document.querySelectorAll('.photo-group').forEach(group => {
+                    const url = group.querySelector('.photo-url').value;
+                    const caption = group.querySelector('.photo-caption').value;
+                    const date = group.querySelector('.photo-date').value;
+                    
+                    if (url && caption && date) {
+                        photos.push({
+                            src: url,
+                            caption: caption,
+                            date: date
+                        });
+                    }
+                });
+                
+                if (!coupleName || !tagline || photos.length === 0) {
+                    showNotification('情侣名称、描述和至少一张照片是必需的', 'error');
+                    return;
+                }
+                
+                appData.home.coupleName = coupleName;
+                appData.home.tagline = tagline;
+                appData.home.photos = photos;
+                
+                saveAppData();
+                initHome();
+                closeModal();
+                showNotification('首页内容修改成功');
+            };
+        }
+        
+        // 编辑关于她标题
+        function openEditAboutHerTitleModal() {
+            const newTitle = prompt('修改"关于她"标题:', appData.aboutHer.title);
+            if (newTitle !== null && newTitle.trim() !== '') {
+                appData.aboutHer.title = newTitle;
+                saveAppData();
+                initAboutHer();
+                showNotification('标题修改成功');
+            }
+        }
+        
+        // 编辑纪念日标题
+        function openEditMilestonesTitleModal() {
+            const newTitle = prompt('修改"纪念日"标题:', appData.milestones.title);
+            if (newTitle !== null && newTitle.trim() !== '') {
+                appData.milestones.title = newTitle;
+                saveAppData();
+                document.querySelector('#milestones .section-title').childNodes[0].textContent = newTitle;
+                showNotification('标题修改成功');
+            }
+        }
+        
+        // 编辑底部
+        function openEditFooterModal() {
+            // 设置模态框标题
+            document.getElementById('modal-title').textContent = '编辑底部内容';
+            
+            // 生成表单
+            const form = document.getElementById('edit-form');
+            form.innerHTML = `
+                <div class="form-group">
+                    <label for="edit-footer-text1">第一行文字</label>
+                    <textarea id="edit-footer-text1" class="form-control" rows="2">${appData.footer.text1}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-footer-text2">第二行文字</label>
+                    <textarea id="edit-footer-text2" class="form-control" rows="2">${appData.footer.text2}</textarea>
+                </div>
+            `;
+            
+            // 显示模态框
+            document.getElementById('edit-modal').style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('save-edit').onclick = function() {
+                const text1 = document.getElementById('edit-footer-text1').value;
+                const text2 = document.getElementById('edit-footer-text2').value;
+                
+                if (!text1 || !text2) {
+                    showNotification('底部文字不能为空', 'error');
+                    return;
+                }
+                
+                appData.footer.text1 = text1;
+                appData.footer.text2 = text2;
+                
+                saveAppData();
+                initFooter();
+                closeModal();
+                showNotification('底部内容修改成功');
+            };
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+            document.getElementById('edit-form').innerHTML = '';
+        }
+        
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notification-text');
+            
+            text.textContent = message;
+            notification.className = `notification notification-${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
         
         // 页面加载时初始化
@@ -1157,20 +1943,43 @@
             // 创建浮动爱心
             createFloatingHearts();
             
+            // 初始化应用数据
+            initAppData();
+            
             // 初始化密码保护
             initPasswordProtection();
             
             // 初始化导航
             initNavigation();
             
+            // 初始化首页
+            initHome();
+            
+            // 初始化关于她
+            initAboutHer();
+            
             // 初始化纪念日
             initMilestones();
+            
+            // 初始化底部
+            initFooter();
             
             // 初始化编辑按钮
             initEditButtons();
             
             // 开始计时器更新
             setInterval(updateAllMilestoneTimers, 1000); // 每秒更新一次
+            
+            // 模态框关闭按钮
+            document.getElementById('close-modal').addEventListener('click', closeModal);
+            document.getElementById('cancel-edit').addEventListener('click', closeModal);
+            
+            // 点击模态框外部关闭
+            document.getElementById('edit-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
         });
         
         // 密码保护
@@ -1181,8 +1990,8 @@
             const passwordError = document.getElementById('password-error');
             const siteContent = document.getElementById('site-content');
             
-            // 修改了默认密码：从5201314改为250406250527
-            const correctPassword = "250406250527"; // 相遇(250406) + 在一起(250527)
+            // 修改后的密码
+            const correctPassword = "250406250527";
             
             // 检查是否已登录
             const isLoggedIn = localStorage.getItem('sweetSpaceLoggedIn');
@@ -1276,66 +2085,23 @@
         // 初始化编辑按钮
         function initEditButtons() {
             // 编辑首页按钮
-            document.getElementById('edit-home-btn').addEventListener('click', function() {
-                const newTitle = prompt('修改情侣名称:', '芬 ❤️ 萌');
-                if (newTitle) {
-                    document.querySelector('.couple-name').textContent = newTitle;
-                }
-                
-                const newTagline = prompt('修改首页描述:', document.querySelector('.tagline').textContent);
-                if (newTagline) {
-                    document.querySelector('.tagline').textContent = newTagline;
-                }
-            });
+            document.getElementById('edit-home-btn').addEventListener('click', openEditHomeModal);
             
             // 编辑关于她标题
-            document.getElementById('edit-about-her-title').addEventListener('click', function() {
-                const newTitle = prompt('修改"关于她"标题:', '关于她');
-                if (newTitle) {
-                    document.querySelector('#about-her .section-title').childNodes[0].textContent = newTitle;
-                }
-            });
+            document.getElementById('edit-about-her-title').addEventListener('click', openEditAboutHerTitleModal);
             
             // 编辑纪念日标题
-            document.getElementById('edit-milestones-title').addEventListener('click', function() {
-                const newTitle = prompt('修改"纪念日"标题:', '纪念日');
-                if (newTitle) {
-                    document.querySelector('#milestones .section-title').childNodes[0].textContent = newTitle;
-                }
-            });
-            
-            // 编辑关于她卡片
-            document.querySelectorAll('.edit-about-card').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const cardType = this.dataset.card;
-                    alert(`编辑${getCardName(cardType)}功能正在开发中...`);
-                });
-            });
+            document.getElementById('edit-milestones-title').addEventListener('click', openEditMilestonesTitleModal);
             
             // 添加关于她卡片
             document.getElementById('add-about-card').addEventListener('click', function() {
-                alert('添加新卡片功能正在开发中...');
+                openEditAboutCardModal();
             });
             
-            // 编辑底部文字
-            document.getElementById('edit-footer').addEventListener('click', function() {
-                const footerText = document.querySelector('footer p').textContent;
-                const newText = prompt('修改底部文字:', footerText);
-                if (newText) {
-                    document.querySelector('footer p').textContent = newText;
-                }
+            // 添加纪念日按钮
+            document.getElementById('add-milestone-btn').addEventListener('click', function() {
+                openEditMilestoneModal();
             });
-        }
-        
-        // 获取卡片名称
-        function getCardName(cardType) {
-            switch(cardType) {
-                case 'basic': return '基本信息';
-                case 'likes': return '她的喜好';
-                case 'dislikes': return '她的不喜欢';
-                case 'story': return '我们的故事';
-                default: return '卡片';
-            }
         }
     </script>
 </body>
