@@ -1,0 +1,3212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的甜蜜空间</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #89CFF0;
+            --light-blue: #B6E6FF;
+            --light-green: #C9E4C5;
+            --accent-color: #6EB5FF;
+            --light-color: #F8FDFF;
+            --dark-color: #2C5F7D;
+            --text-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--light-green) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 密码保护层 */
+        #password-protection {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--light-green) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .password-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+        }
+        
+        .password-container h2 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .password-container p {
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(110, 181, 255, 0.2);
+        }
+        
+        .password-btn {
+            padding: 15px 30px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .password-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .password-error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* 主要内容区 */
+        main {
+            padding: 2rem 0;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-blue);
+            border-radius: 2px;
+        }
+        
+        /* 首页样式 */
+        #home {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .couple-name {
+            font-size: 3rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+        
+        .photo-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 280px;
+            position: relative;
+        }
+        
+        .photo-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 20px 15px 10px;
+            transform: translateY(5px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .photo-item:hover .photo-caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* 关于她页面 */
+        #about-her {
+            display: none;
+        }
+        
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .about-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .about-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .about-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .about-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .about-title {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+        }
+        
+        .about-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .about-content li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .about-content li:last-child {
+            border-bottom: none;
+        }
+        
+        .relationship-timeline {
+            grid-column: 1 / -1;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background-color: var(--primary-blue);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-end;
+            padding-right: 50px;
+        }
+        
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-left: 50px;
+        }
+        
+        .timeline-content {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            width: 80%;
+            max-width: 350px;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid rgba(255, 255, 255, 0.85);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid rgba(255, 255, 255, 0.85);
+        }
+        
+        .timeline-date {
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary-blue);
+        }
+        
+        /* 日记样式 */
+        #diary {
+            display: none;
+        }
+        
+        .diary-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 992px) {
+            .diary-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .diary-list {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+        }
+        
+        .diary-list h3 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .diary-entries {
+            list-style: none;
+        }
+        
+        .diary-entry {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            background-color: white;
+        }
+        
+        .diary-entry:hover {
+            background-color: rgba(182, 230, 255, 0.3);
+        }
+        
+        .diary-entry.active {
+            background-color: rgba(182, 230, 255, 0.5);
+            border-left-color: var(--primary-blue);
+        }
+        
+        .diary-date {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        
+        .diary-preview {
+            font-size: 0.95rem;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .diary-editor {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+        
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .diary-date-input {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+        }
+        
+        .diary-title-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        
+        .diary-content {
+            flex: 1;
+            min-height: 400px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            resize: vertical;
+            background-color: white;
+        }
+        
+        .diary-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #ff5252;
+        }
+        
+        .btn-success {
+            background-color: #51cf66;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #40c057;
+        }
+        
+        .btn-export {
+            background-color: #8a2be2;
+            color: white;
+        }
+        
+        .btn-export:hover {
+            background-color: #7b1fd1;
+        }
+        
+        /* 相册样式 */
+        #gallery {
+            display: none;
+        }
+        
+        .upload-area {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px dashed var(--primary-blue);
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent-color);
+        }
+        
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 30px;
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .album-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .album-item {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+        
+        .album-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .album-cover {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .album-item:hover .album-cover img {
+            transform: scale(1.05);
+        }
+        
+        .album-info {
+            padding: 20px;
+        }
+        
+        .album-info h3 {
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .album-info p {
+            color: #777;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* 纪念日样式 - 改进版 */
+        #milestones {
+            display: none;
+        }
+        
+        .milestones-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 2rem;
+        }
+        
+        .milestone-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+        
+        .milestone-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .milestone-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .milestone-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+        
+        .milestone-counters {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 15px;
+        }
+        
+        .counter-box {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .counter-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 8px;
+        }
+        
+        .counter-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .counter-unit {
+            font-size: 0.9rem;
+            color: #777;
+            margin-left: 3px;
+        }
+        
+        .milestone-date {
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        /* 底部样式 */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .heartbeat {
+            color: var(--primary-blue);
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            5% { transform: scale(1.2); }
+            10% { transform: scale(1.1); }
+            15% { transform: scale(1.3); }
+            50% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 编辑和删除按钮 */
+        .edit-btn, .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px 8px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        .edit-btn {
+            color: var(--primary-blue);
+        }
+        
+        .edit-btn:hover {
+            background-color: rgba(137, 207, 240, 0.1);
+        }
+        
+        .delete-btn {
+            color: #ff6b6b;
+        }
+        
+        .delete-btn:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        
+        .add-btn {
+            margin-top: 10px;
+            background-color: var(--light-green);
+            color: var(--dark-color);
+            border: 1px solid var(--light-green);
+        }
+        
+        .add-btn:hover {
+            background-color: #b5d8b0;
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(137, 207, 240, 0.2);
+        }
+        
+        /* 设置面板 */
+        .settings-panel {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .settings-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            padding: 8px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        .settings-btn:hover {
+            background-color: rgba(137, 207, 240, 0.1);
+        }
+        
+        /* 导出选项 */
+        .export-options {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            min-width: 200px;
+        }
+        
+        .export-options.show {
+            display: block;
+        }
+        
+        .export-option {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 5px;
+        }
+        
+        .export-option:hover {
+            background-color: rgba(137, 207, 240, 0.1);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-blue);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav li {
+                width: 100%;
+            }
+            
+            nav a {
+                display: block;
+                padding: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .couple-name {
+                font-size: 2.2rem;
+            }
+            
+            .photo-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .diary-actions {
+                justify-content: center;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+            }
+            
+            .milestones-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-panel {
+                top: 80px;
+                right: 10px;
+            }
+        }
+        
+        /* 浮动爱心 */
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            opacity: 0.7;
+            z-index: -1;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 密码保护层 -->
+    <div id="password-protection">
+        <div class="password-container">
+            <h2>我们的甜蜜空间</h2>
+            <p>请输入访问密码查看我们的专属空间</p>
+            <input type="password" class="password-input" id="password-input" placeholder="请输入密码" autocomplete="off">
+            <button class="password-btn" id="password-submit">进入我们的空间</button>
+            <div class="password-error" id="password-error">密码错误，请重新输入</div>
+            <p style="font-size: 0.9rem; color: #777; margin-top: 20px;">提示：密码是我们的特殊纪念日或名字组合</p>
+        </div>
+    </div>
+    
+    <!-- 浮动爱心背景 -->
+    <div id="floating-hearts"></div>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel">
+        <button class="settings-btn" id="export-btn" title="导出数据">
+            <i class="fas fa-download"></i>
+        </button>
+        <button class="settings-btn" id="change-password-btn" title="修改密码">
+            <i class="fas fa-key"></i>
+        </button>
+        <button class="settings-btn" id="backup-btn" title="备份数据">
+            <i class="fas fa-save"></i>
+        </button>
+        
+        <!-- 导出选项 -->
+        <div class="export-options" id="export-options">
+            <button class="export-option" id="export-diary">
+                <i class="fas fa-book"></i> 导出日记
+            </button>
+            <button class="export-option" id="export-all">
+                <i class="fas fa-file-archive"></i> 导出所有数据
+            </button>
+            <button class="export-option" id="export-photos">
+                <i class="fas fa-images"></i> 导出照片链接
+            </button>
+        </div>
+    </div>
+    
+    <!-- 网站头部 -->
+    <header id="site-header" style="display: none;">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heart"></i>
+                <h1 id="site-title">我们的甜蜜空间</h1>
+                <button class="edit-btn" id="edit-site-title" title="编辑网站标题">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="mainMenu">
+                    <li><a href="#" class="nav-link active" data-section="home">首页</a></li>
+                    <li><a href="#" class="nav-link" data-section="about-her">关于她</a></li>
+                    <li><a href="#" class="nav-link" data-section="diary">恋爱日记</a></li>
+                    <li><a href="#" class="nav-link" data-section="gallery">甜蜜相册</a></li>
+                    <li><a href="#" class="nav-link" data-section="milestones">纪念日</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主要内容区 -->
+    <main id="site-content" style="display: none;">
+        <div class="container">
+            <!-- 首页 -->
+            <section id="home" class="section active">
+                <h2 class="couple-name" id="couple-name-title">
+                    <span id="couple-name-text">芬与萌的甜蜜空间</span>
+                    <button class="edit-btn" id="edit-couple-name" title="编辑情侣名称">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </h2>
+                
+                <p class="tagline" id="home-tagline">
+                    <span id="tagline-text">这里记录着我们每一个甜蜜瞬间，从相遇、相知到相爱，每一个回忆都值得珍藏。这是我们专属的小天地，只属于我们两个人的故事。</span>
+                    <button class="edit-btn" id="edit-tagline" title="编辑首页描述">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </p>
+                
+                <div class="photo-gallery" id="home-gallery">
+                    <!-- 首页照片将通过JS动态添加 -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" id="add-home-photo">
+                        <i class="fas fa-plus"></i> 添加首页照片
+                    </button>
+                </div>
+            </section>
+            
+            <!-- 关于她 -->
+            <section id="about-her" class="section">
+                <h2 class="section-title">关于她 
+                    <button class="edit-btn" id="edit-about-her-title" title="编辑标题">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </h2>
+                
+                <div class="about-container" id="about-her-container">
+                    <!-- 关于她的内容将通过JS动态添加 -->
+                </div>
+            </section>
+            
+            <!-- 恋爱日记 -->
+            <section id="diary" class="section">
+                <h2 class="section-title">恋爱日记
+                    <button class="edit-btn" id="edit-diary-title" title="编辑标题">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </h2>
+                <div class="diary-container">
+                    <div class="diary-list">
+                        <h3>日记列表
+                            <button class="btn add-btn" id="new-diary-btn" style="padding: 5px 10px; font-size: 0.9rem;">
+                                <i class="fas fa-plus"></i> 新建日记
+                            </button>
+                        </h3>
+                        <ul class="diary-entries" id="diaryEntries">
+                            <!-- 日记条目将通过JS动态添加 -->
+                        </ul>
+                    </div>
+                    
+                    <div class="diary-editor">
+                        <div class="diary-header">
+                            <input type="date" class="diary-date-input" id="diaryDate" value="">
+                            
+                            <div class="diary-actions">
+                                <button class="btn btn-danger" id="deleteDiaryBtn">
+                                    <i class="fas fa-trash"></i> 删除日记
+                                </button>
+                                <button class="btn btn-secondary" id="saveDraftBtn">
+                                    <i class="fas fa-save"></i> 保存草稿
+                                </button>
+                                <button class="btn btn-primary" id="saveDiaryBtn">
+                                    <i class="fas fa-check"></i> 保存日记
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <input type="text" class="diary-title-input" id="diaryTitle" placeholder="日记标题...">
+                        
+                        <textarea class="diary-content" id="diaryContent" placeholder="写下今天的甜蜜故事..."></textarea>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 甜蜜相册 -->
+            <section id="gallery" class="section">
+                <h2 class="section-title">甜蜜相册
+                    <button class="edit-btn" id="edit-gallery-title" title="编辑标题">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </h2>
+                
+                <div class="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>上传我们的照片</h3>
+                    <p>将照片拖放到这里，或点击按钮选择文件</p>
+                    <div class="upload-btn" id="uploadBtn">选择照片</div>
+                    <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                </div>
+                
+                <div class="album-container" id="albumContainer">
+                    <!-- 相册将通过JS动态添加 -->
+                </div>
+            </section>
+            
+            <!-- 纪念日 -->
+            <section id="milestones" class="section">
+                <h2 class="section-title">纪念日
+                    <button class="edit-btn" id="edit-milestones-title" title="编辑标题">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </h2>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn btn-primary" id="add-milestone-btn">
+                        <i class="fas fa-plus"></i> 添加纪念日
+                    </button>
+                </div>
+                
+                <div class="milestones-container" id="milestonesContainer">
+                    <!-- 纪念日将通过JS动态添加 -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- 网站底部 -->
+    <footer id="site-footer" style="display: none;">
+        <div class="container footer-content">
+            <p id="footer-text">© 2025 我们的甜蜜空间 | 专属于 <span class="heartbeat" id="footer-couple-name">芬与萌</span> 的爱情小窝</p>
+            <p id="footer-quote">每一天都因为有你而更加美好 ❤️</p>
+            <button class="edit-btn" id="edit-footer" style="color: white;" title="编辑底部文字">
+                <i class="fas fa-edit"></i> 编辑
+            </button>
+        </div>
+    </footer>
+    
+    <!-- 编辑模态框 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">编辑</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div id="modalBody">
+                <!-- 模态框内容将动态填充 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 图片上传模态框 -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">添加/编辑照片</h3>
+                <button class="close-modal" id="closeImageModal">&times;</button>
+            </div>
+            <div id="imageModalBody">
+                <div class="form-group">
+                    <label for="imageUrl">图片URL</label>
+                    <input type="text" id="imageUrl" class="form-control" placeholder="输入图片链接或上传图片">
+                </div>
+                <div class="form-group">
+                    <label for="imageFile">或上传图片</label>
+                    <input type="file" id="imageFile" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="imageTitle">图片标题</label>
+                    <input type="text" id="imageTitle" class="form-control" placeholder="输入图片标题">
+                </div>
+                <div class="form-group">
+                    <label for="imageDescription">图片描述</label>
+                    <textarea id="imageDescription" class="form-control" placeholder="输入图片描述" rows="3"></textarea>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelImageBtn">取消</button>
+                    <button class="btn btn-primary" id="saveImageBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 密码修改模态框 -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">修改访问密码</h3>
+                <button class="close-modal" id="closePasswordModal">&times;</button>
+            </div>
+            <div id="passwordModalBody">
+                <div class="form-group">
+                    <label for="currentPassword">当前密码</label>
+                    <input type="password" id="currentPassword" class="form-control" placeholder="请输入当前密码">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">新密码</label>
+                    <input type="password" id="newPassword" class="form-control" placeholder="请输入新密码">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认新密码</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="请再次输入新密码">
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelPasswordBtn">取消</button>
+                    <button class="btn btn-primary" id="savePasswordBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局数据存储
+        let appData = {
+            siteTitle: "我们的甜蜜空间",
+            coupleName: "芬与萌的甜蜜空间",
+            tagline: "这里记录着我们每一个甜蜜瞬间，从相遇、相知到相爱，每一个回忆都值得珍藏。这是我们专属的小天地，只属于我们两个人的故事。",
+            footerText: "© 2025 我们的甜蜜空间 | 专属于 <span class='heartbeat'>芬与萌</span> 的爱情小窝",
+            footerQuote: "每一天都因为有你而更加美好 ❤️",
+            homePhotos: [
+                {
+                    id: 1,
+                    url: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                    title: "第一次旅行",
+                    description: "2023年5月 · 海边"
+                },
+                {
+                    id: 2,
+                    url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    title: "周年纪念日",
+                    description: "2023年8月 · 餐厅"
+                },
+                {
+                    id: 3,
+                    url: "https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                    title: "日常甜蜜",
+                    description: "2023年10月 · 家中"
+                }
+            ],
+            aboutHer: {
+                basicInfo: [
+                    { label: "生日", value: "2003年4月23日" },
+                    { label: "家乡", value: "江西赣州" },
+                    { label: "称呼", value: "芬、冷、饭饭" },
+                    { label: "饮食习惯", value: "家里准时准点吃饭（中午12点，晚上18点）" },
+                    { label: "天气偏好", value: "喜欢多云，不喜欢下雨天（泥土的味道）" }
+                ],
+                likes: [
+                    { label: "明星", value: "白鹿、肖战" },
+                    { label: "喜欢的茶", value: "古茗的云岭茉莉白" },
+                    { label: "最喜欢的食物", value: "螺蛳粉" },
+                    { label: "想去的地方", value: "海边" },
+                    { label: "性格偏好", value: "喜欢偏执，只要一人；喜欢需要；喜欢在乎；喜欢独一无二" }
+                ],
+                dislikes: [
+                    { label: "影视题材", value: "不喜欢骨科题材" },
+                    { label: "感情上", value: "不喜欢精神出轨" },
+                    { label: "食物", value: "不喜欢吃太甜的" },
+                    { label: "肉类", value: "不喜欢吃肉" },
+                    { label: "节日食物", value: "不喜欢月饼" },
+                    { label: "蔬菜", value: "不喜欢生的番茄" },
+                    { label: "早餐", value: "几乎不吃早餐" }
+                ],
+                timeline: [
+                    {
+                        date: "2025年4月6日",
+                        title: "初遇",
+                        content: "游戏中相识，她叫'茶泡饭'，我以为她是说茶不一样要贵点，没想到是自我介绍。"
+                    },
+                    {
+                        date: "2025年5月27日",
+                        title: "在一起",
+                        content: "我们正式成为彼此的唯一天。"
+                    }
+                ]
+            },
+            diaries: [
+                {
+                    id: 1,
+                    date: '2025-04-06',
+                    title: '初遇茶泡饭',
+                    content: '今天在游戏中认识了一个叫"茶泡饭"的女孩。她告诉我她的茶一杯500，但对我免费。我开玩笑说我的好友位收费，但对她例外。就这样，我们开始了特别的对话。',
+                    isDraft: false
+                },
+                {
+                    id: 2,
+                    date: '2025-04-10',
+                    title: '第一次语音聊天',
+                    content: '今天和芬第一次语音聊天，她的声音真好听。我们聊了很多，从游戏到生活。她告诉我她喜欢古茗的云岭茉莉白，不喜欢吃太甜的东西，也不喜欢吃肉。',
+                    isDraft: false
+                },
+                {
+                    id: 3,
+                    date: '2025-05-27',
+                    title: '我们在一起了',
+                    content: '今天我鼓起勇气问她："你喜欢我吗？" 她的回答让我心跳加速："喜欢啊，不喜欢为什么靠近你？为什么还留在你身边这么久？我不喜欢早就走了。" 我让她当我的唯一，她答应了。从今天起，茶泡饭和南書正式在一起了！',
+                    isDraft: false
+                }
+            ],
+            galleryAlbums: [
+                {
+                    id: 1,
+                    name: '旅行回忆',
+                    photoCount: 12,
+                    cover: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'
+                },
+                {
+                    id: 2,
+                    name: '日常甜蜜',
+                    photoCount: 24,
+                    cover: 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80'
+                },
+                {
+                    id: 3,
+                    name: '特别日子',
+                    photoCount: 8,
+                    cover: 'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80'
+                }
+            ],
+            milestones: [
+                {
+                    id: 1,
+                    title: '在一起',
+                    dateType: 'since', // since: 从某天开始 until: 到某天还有多久
+                    targetDate: '2025-05-27',
+                    icon: 'fas fa-heart',
+                    showDays: true,
+                    showHours: true,
+                    showMinutes: false
+                },
+                {
+                    id: 2,
+                    title: '她的生日',
+                    dateType: 'until', // 倒计时到生日
+                    targetDate: '2025-04-23',
+                    icon: 'fas fa-birthday-cake',
+                    showDays: true,
+                    showHours: true,
+                    showMinutes: true
+                },
+                {
+                    id: 3,
+                    title: '初遇纪念',
+                    dateType: 'since',
+                    targetDate: '2025-04-06',
+                    icon: 'fas fa-gamepad',
+                    showDays: true,
+                    showHours: false,
+                    showMinutes: false
+                }
+            ],
+            nextDiaryId: 4,
+            nextPhotoId: 4,
+            nextMilestoneId: 4,
+            currentDiaryId: null,
+            editingItem: null,
+            sitePassword: "iloveyou520" // 默认密码
+        };
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建浮动爱心
+            createFloatingHearts();
+            
+            // 从本地存储加载数据
+            loadDataFromStorage();
+            
+            // 初始化密码保护
+            initPasswordProtection();
+            
+            // 初始化导出功能
+            initExportFunctions();
+            
+            // 初始化设置按钮
+            initSettingsButtons();
+            
+            // 初始化导航
+            initNavigation();
+            
+            // 初始化首页
+            initHomePage();
+            
+            // 初始化关于她页面
+            initAboutHerPage();
+            
+            // 初始化日记功能
+            initDiary();
+            
+            // 初始化相册
+            initGallery();
+            
+            // 初始化纪念日
+            initMilestones();
+            
+            // 初始化模态框
+            initModals();
+            
+            // 初始化编辑按钮
+            initEditButtons();
+            
+            // 设置当前日期
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('diaryDate').value = today;
+            
+            // 更新纪念日倒计时/正计时
+            updateMilestoneCounters();
+            setInterval(updateMilestoneCounters, 60000); // 每分钟更新一次
+        });
+        
+        // 创建浮动爱心
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('floating-hearts');
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.animationDelay = Math.random() * 15 + 's';
+                heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // 从本地存储加载数据
+        function loadDataFromStorage() {
+            const savedData = localStorage.getItem('sweetSpaceData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                // 合并保存的数据，但保留默认值作为后备
+                appData = { ...appData, ...parsedData };
+            }
+            
+            // 检查是否有保存的密码
+            const savedPassword = localStorage.getItem('sitePassword');
+            if (savedPassword) {
+                appData.sitePassword = savedPassword;
+            }
+        }
+        
+        // 保存数据到本地存储
+        function saveDataToStorage() {
+            localStorage.setItem('sweetSpaceData', JSON.stringify(appData));
+            localStorage.setItem('sitePassword', appData.sitePassword);
+        }
+        
+        // 初始化密码保护
+        function initPasswordProtection() {
+            const passwordInput = document.getElementById('password-input');
+            const passwordSubmit = document.getElementById('password-submit');
+            const passwordError = document.getElementById('password-error');
+            
+            // 密码输入框回车键提交
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            
+            // 密码提交按钮点击
+            passwordSubmit.addEventListener('click', checkPassword);
+            
+            function checkPassword() {
+                const inputPassword = passwordInput.value.trim();
+                
+                if (inputPassword === appData.sitePassword) {
+                    // 密码正确，显示网站内容
+                    document.getElementById('password-protection').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('password-protection').style.display = 'none';
+                        document.getElementById('site-header').style.display = 'block';
+                        document.getElementById('site-content').style.display = 'block';
+                        document.getElementById('site-footer').style.display = 'block';
+                    }, 500);
+                } else {
+                    // 密码错误
+                    passwordError.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    // 震动效果
+                    passwordInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        passwordInput.style.animation = '';
+                    }, 500);
+                }
+            }
+            
+            // 添加震动动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 初始化导出功能
+        function initExportFunctions() {
+            const exportBtn = document.getElementById('export-btn');
+            const exportOptions = document.getElementById('export-options');
+            const exportDiaryBtn = document.getElementById('export-diary');
+            const exportAllBtn = document.getElementById('export-all');
+            const exportPhotosBtn = document.getElementById('export-photos');
+            
+            // 显示/隐藏导出选项
+            exportBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                exportOptions.classList.toggle('show');
+            });
+            
+            // 点击其他地方关闭导出选项
+            document.addEventListener('click', function() {
+                exportOptions.classList.remove('show');
+            });
+            
+            // 导出日记
+            exportDiaryBtn.addEventListener('click', function() {
+                exportDiaryData();
+                exportOptions.classList.remove('show');
+            });
+            
+            // 导出所有数据
+            exportAllBtn.addEventListener('click', function() {
+                exportAllData();
+                exportOptions.classList.remove('show');
+            });
+            
+            // 导出照片链接
+            exportPhotosBtn.addEventListener('click', function() {
+                exportPhotosData();
+                exportOptions.classList.remove('show');
+            });
+        }
+        
+        // 导出日记数据
+        function exportDiaryData() {
+            let exportText = "=== 我们的恋爱日记 ===\n\n";
+            
+            appData.diaries.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            appData.diaries.forEach(diary => {
+                const date = new Date(diary.date);
+                const formattedDate = `${date.getFullYear()}年${date.getMonth()+1}月${date.getDate()}日`;
+                exportText += `【${formattedDate}】${diary.title}\n`;
+                exportText += `${diary.content}\n\n`;
+                exportText += "─".repeat(50) + "\n\n";
+            });
+            
+            downloadFile(exportText, '我们的恋爱日记.txt', 'text/plain');
+        }
+        
+        // 导出所有数据
+        function exportAllData() {
+            const exportData = {
+                ...appData,
+                // 不导出密码
+                sitePassword: undefined
+            };
+            
+            const exportText = JSON.stringify(exportData, null, 2);
+            downloadFile(exportText, '我们的甜蜜空间备份.json', 'application/json');
+        }
+        
+        // 导出照片链接
+        function exportPhotosData() {
+            let exportText = "=== 我们的照片记录 ===\n\n";
+            
+            // 首页照片
+            exportText += "【首页照片】\n";
+            appData.homePhotos.forEach(photo => {
+                exportText += `标题：${photo.title}\n`;
+                exportText += `描述：${photo.description}\n`;
+                exportText += `链接：${photo.url}\n\n`;
+            });
+            
+            // 相册照片
+            exportText += "\n【相册照片】\n";
+            appData.galleryAlbums.forEach(album => {
+                exportText += `相册：${album.name}（${album.photoCount}张照片）\n`;
+                exportText += `封面：${album.cover}\n\n`;
+            });
+            
+            downloadFile(exportText, '我们的照片记录.txt', 'text/plain');
+        }
+        
+        // 下载文件函数
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`文件 ${filename} 已开始下载！`);
+        }
+        
+        // 初始化设置按钮
+        function initSettingsButtons() {
+            // 修改密码按钮
+            document.getElementById('change-password-btn').addEventListener('click', function() {
+                openPasswordModal();
+            });
+            
+            // 备份数据按钮
+            document.getElementById('backup-btn').addEventListener('click', function() {
+                exportAllData();
+            });
+        }
+        
+        // 打开密码修改模态框
+        function openPasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            const currentPassword = document.getElementById('currentPassword');
+            const newPassword = document.getElementById('newPassword');
+            const confirmPassword = document.getElementById('confirmPassword');
+            
+            // 清空表单
+            currentPassword.value = '';
+            newPassword.value = '';
+            confirmPassword.value = '';
+            
+            modal.style.display = 'flex';
+            
+            // 关闭按钮
+            document.getElementById('closePasswordModal').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮
+            document.getElementById('cancelPasswordBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // 保存按钮
+            document.getElementById('savePasswordBtn').addEventListener('click', function() {
+                const current = currentPassword.value.trim();
+                const newPass = newPassword.value.trim();
+                const confirm = confirmPassword.value.trim();
+                
+                if (current !== appData.sitePassword) {
+                    alert('当前密码错误！');
+                    return;
+                }
+                
+                if (newPass.length < 4) {
+                    alert('新密码至少需要4个字符！');
+                    return;
+                }
+                
+                if (newPass !== confirm) {
+                    alert('两次输入的新密码不一致！');
+                    return;
+                }
+                
+                appData.sitePassword = newPass;
+                saveDataToStorage();
+                modal.style.display = 'none';
+                alert('密码修改成功！');
+            });
+        }
+        
+        // 初始化导航
+        function initNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mainMenu = document.getElementById('mainMenu');
+            
+            // 导航菜单切换
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 获取目标部分
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    // 更新活动链接
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 显示目标部分
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetSection) {
+                            section.style.display = 'block';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                    
+                    // 移动端菜单隐藏
+                    if (window.innerWidth <= 768) {
+                        mainMenu.classList.remove('show');
+                    }
+                });
+            });
+            
+            // 移动端菜单切换
+            mobileMenuBtn.addEventListener('click', function() {
+                mainMenu.classList.toggle('show');
+            });
+        }
+        
+        // 初始化首页
+        function initHomePage() {
+            // 设置网站标题
+            document.getElementById('site-title').textContent = appData.siteTitle;
+            document.getElementById('couple-name-text').textContent = appData.coupleName;
+            document.getElementById('tagline-text').textContent = appData.tagline;
+            document.getElementById('footer-text').innerHTML = appData.footerText;
+            document.getElementById('footer-quote').textContent = appData.footerQuote;
+            
+            // 加载首页照片
+            loadHomePhotos();
+            
+            // 添加首页照片按钮
+            document.getElementById('add-home-photo').addEventListener('click', function() {
+                openImageModal('home', null);
+            });
+        }
+        
+        // 加载首页照片
+        function loadHomePhotos() {
+            const galleryContainer = document.getElementById('home-gallery');
+            galleryContainer.innerHTML = '';
+            
+            appData.homePhotos.forEach(photo => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                photoItem.dataset.id = photo.id;
+                
+                photoItem.innerHTML = `
+                    <img src="${photo.url}" alt="${photo.title}">
+                    <div class="photo-caption">
+                        <h3>${photo.title}</h3>
+                        <p>${photo.description}</p>
+                        <div style="margin-top: 10px;">
+                            <button class="edit-btn edit-home-photo" data-id="${photo.id}" title="编辑照片">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn delete-home-photo" data-id="${photo.id}" title="删除照片">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                galleryContainer.appendChild(photoItem);
+            });
+            
+            // 添加编辑和删除事件监听
+            document.querySelectorAll('.edit-home-photo').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const photoId = parseInt(this.dataset.id);
+                    openImageModal('home', photoId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-home-photo').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const photoId = parseInt(this.dataset.id);
+                    if (confirm('确定要删除这张照片吗？')) {
+                        deleteHomePhoto(photoId);
+                    }
+                });
+            });
+        }
+        
+        // 删除首页照片
+        function deleteHomePhoto(photoId) {
+            appData.homePhotos = appData.homePhotos.filter(photo => photo.id !== photoId);
+            saveDataToStorage();
+            loadHomePhotos();
+        }
+        
+        // 初始化关于她页面
+        function initAboutHerPage() {
+            const aboutContainer = document.getElementById('about-her-container');
+            aboutContainer.innerHTML = '';
+            
+            // 基本信息卡片
+            const basicInfoCard = createAboutCard('基本信息', appData.aboutHer.basicInfo, 'basicInfo');
+            aboutContainer.appendChild(basicInfoCard);
+            
+            // 喜好卡片
+            const likesCard = createAboutCard('她的喜好', appData.aboutHer.likes, 'likes');
+            aboutContainer.appendChild(likesCard);
+            
+            // 不喜欢卡片
+            const dislikesCard = createAboutCard('她的不喜欢', appData.aboutHer.dislikes, 'dislikes');
+            aboutContainer.appendChild(dislikesCard);
+            
+            // 时间线卡片
+            const timelineCard = createTimelineCard();
+            aboutContainer.appendChild(timelineCard);
+        }
+        
+        // 创建关于卡片
+        function createAboutCard(title, items, category) {
+            const card = document.createElement('div');
+            card.className = 'about-card';
+            
+            let itemsHtml = '';
+            items.forEach((item, index) => {
+                itemsHtml += `
+                    <li>
+                        <strong>${item.label}：</strong>${item.value}
+                        <div>
+                            <button class="edit-btn edit-about-item" data-category="${category}" data-index="${index}" title="编辑">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn delete-about-item" data-category="${category}" data-index="${index}" title="删除">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            card.innerHTML = `
+                <div class="about-header">
+                    <div class="about-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="about-title">${title}</h3>
+                    <button class="btn add-btn add-about-item" data-category="${category}">
+                        <i class="fas fa-plus"></i> 添加
+                    </button>
+                </div>
+                <div class="about-content">
+                    <ul>${itemsHtml}</ul>
+                </div>
+            `;
+            
+            // 添加事件监听
+            card.querySelectorAll('.edit-about-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const index = parseInt(this.dataset.index);
+                    openEditAboutItemModal(category, index);
+                });
+            });
+            
+            card.querySelectorAll('.delete-about-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const index = parseInt(this.dataset.index);
+                    if (confirm('确定要删除这项内容吗？')) {
+                        deleteAboutItem(category, index);
+                    }
+                });
+            });
+            
+            card.querySelector('.add-about-item').addEventListener('click', function() {
+                const category = this.dataset.category;
+                openEditAboutItemModal(category, -1);
+            });
+            
+            return card;
+        }
+        
+        // 创建时间线卡片
+        function createTimelineCard() {
+            const card = document.createElement('div');
+            card.className = 'about-card relationship-timeline';
+            
+            let timelineHtml = '';
+            appData.aboutHer.timeline.forEach((item, index) => {
+                const isOdd = index % 2 === 0;
+                timelineHtml += `
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">
+                                <i class="fas fa-calendar-day"></i>
+                                ${item.date}
+                                <div style="margin-left: auto;">
+                                    <button class="edit-btn edit-timeline-item" data-index="${index}" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-btn delete-timeline-item" data-index="${index}" title="删除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h4>${item.title}</h4>
+                            <p>${item.content}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            card.innerHTML = `
+                <div class="about-header">
+                    <div class="about-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="about-title">我们的故事时间线</h3>
+                    <button class="btn add-btn" id="add-timeline-item">
+                        <i class="fas fa-plus"></i> 添加时间线
+                    </button>
+                </div>
+                <div class="timeline">
+                    ${timelineHtml}
+                </div>
+            `;
+            
+            // 添加事件监听
+            card.querySelectorAll('.edit-timeline-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    openEditTimelineModal(index);
+                });
+            });
+            
+            card.querySelectorAll('.delete-timeline-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    if (confirm('确定要删除这个时间线项目吗？')) {
+                        deleteTimelineItem(index);
+                    }
+                });
+            });
+            
+            card.querySelector('#add-timeline-item').addEventListener('click', function() {
+                openEditTimelineModal(-1);
+            });
+            
+            return card;
+        }
+        
+        // 打开编辑关于她项目的模态框
+        function openEditAboutItemModal(category, index) {
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            const isNew = index === -1;
+            const item = isNew ? { label: '', value: '' } : appData.aboutHer[category][index];
+            
+            modalTitle.textContent = isNew ? `添加${getCategoryName(category)}` : `编辑${getCategoryName(category)}`;
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label for="editLabel">标签</label>
+                    <input type="text" id="editLabel" class="form-control" value="${item.label}">
+                </div>
+                <div class="form-group">
+                    <label for="editValue">内容</label>
+                    <textarea id="editValue" class="form-control" rows="3">${item.value}</textarea>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelEditBtn">取消</button>
+                    <button class="btn btn-primary" id="saveEditBtn">保存</button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('saveEditBtn').addEventListener('click', function() {
+                const label = document.getElementById('editLabel').value.trim();
+                const value = document.getElementById('editValue').value.trim();
+                
+                if (!label || !value) {
+                    alert('请填写完整信息');
+                    return;
+                }
+                
+                if (isNew) {
+                    appData.aboutHer[category].push({ label, value });
+                } else {
+                    appData.aboutHer[category][index] = { label, value };
+                }
+                
+                saveDataToStorage();
+                initAboutHerPage();
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮事件
+            document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 获取分类名称
+        function getCategoryName(category) {
+            switch(category) {
+                case 'basicInfo': return '基本信息';
+                case 'likes': return '喜好';
+                case 'dislikes': return '不喜欢';
+                default: return '项目';
+            }
+        }
+        
+        // 删除关于她项目
+        function deleteAboutItem(category, index) {
+            appData.aboutHer[category].splice(index, 1);
+            saveDataToStorage();
+            initAboutHerPage();
+        }
+        
+        // 打开编辑时间线模态框
+        function openEditTimelineModal(index) {
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            const isNew = index === -1;
+            const item = isNew ? { date: '', title: '', content: '' } : appData.aboutHer.timeline[index];
+            
+            modalTitle.textContent = isNew ? '添加时间线' : '编辑时间线';
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label for="timelineDate">日期</label>
+                    <input type="text" id="timelineDate" class="form-control" value="${item.date}" placeholder="例如：2025年4月6日">
+                </div>
+                <div class="form-group">
+                    <label for="timelineTitle">标题</label>
+                    <input type="text" id="timelineTitle" class="form-control" value="${item.title}">
+                </div>
+                <div class="form-group">
+                    <label for="timelineContent">内容</label>
+                    <textarea id="timelineContent" class="form-control" rows="4">${item.content}</textarea>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelTimelineBtn">取消</button>
+                    <button class="btn btn-primary" id="saveTimelineBtn">保存</button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('saveTimelineBtn').addEventListener('click', function() {
+                const date = document.getElementById('timelineDate').value.trim();
+                const title = document.getElementById('timelineTitle').value.trim();
+                const content = document.getElementById('timelineContent').value.trim();
+                
+                if (!date || !title || !content) {
+                    alert('请填写完整信息');
+                    return;
+                }
+                
+                if (isNew) {
+                    appData.aboutHer.timeline.push({ date, title, content });
+                } else {
+                    appData.aboutHer.timeline[index] = { date, title, content };
+                }
+                
+                saveDataToStorage();
+                initAboutHerPage();
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮事件
+            document.getElementById('cancelTimelineBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 删除时间线项目
+        function deleteTimelineItem(index) {
+            appData.aboutHer.timeline.splice(index, 1);
+            saveDataToStorage();
+            initAboutHerPage();
+        }
+        
+        // 初始化日记功能
+        function initDiary() {
+            const diaryEntries = document.getElementById('diaryEntries');
+            const diaryTitle = document.getElementById('diaryTitle');
+            const diaryContent = document.getElementById('diaryContent');
+            const diaryDate = document.getElementById('diaryDate');
+            const saveDiaryBtn = document.getElementById('saveDiaryBtn');
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            const deleteDiaryBtn = document.getElementById('deleteDiaryBtn');
+            const newDiaryBtn = document.getElementById('new-diary-btn');
+            
+            // 加载日记列表
+            function loadDiaryEntries() {
+                diaryEntries.innerHTML = '';
+                
+                appData.diaries.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                appData.diaries.forEach(diary => {
+                    const diaryEntry = document.createElement('li');
+                    diaryEntry.className = 'diary-entry';
+                    diaryEntry.dataset.id = diary.id;
+                    
+                    if (appData.currentDiaryId === diary.id) {
+                        diaryEntry.classList.add('active');
+                    }
+                    
+                    const date = new Date(diary.date);
+                    const formattedDate = `${date.getFullYear()}年${date.getMonth()+1}月${date.getDate()}日`;
+                    
+                    diaryEntry.innerHTML = `
+                        <div class="diary-date">${formattedDate} ${diary.isDraft ? '<span style="color:#ff7eb3;">(草稿)</span>' : ''}</div>
+                        <div class="diary-preview">${diary.title || '无标题日记'}</div>
+                    `;
+                    
+                    diaryEntry.addEventListener('click', () => {
+                        document.querySelectorAll('.diary-entry').forEach(entry => {
+                            entry.classList.remove('active');
+                        });
+                        diaryEntry.classList.add('active');
+                        
+                        appData.currentDiaryId = diary.id;
+                        diaryDate.value = diary.date;
+                        diaryTitle.value = diary.title;
+                        diaryContent.value = diary.content;
+                    });
+                    
+                    diaryEntries.appendChild(diaryEntry);
+                });
+                
+                // 如果没有选中的日记，选中第一个
+                if (!appData.currentDiaryId && appData.diaries.length > 0) {
+                    diaryEntries.firstChild.click();
+                }
+            }
+            
+            // 新建日记
+            newDiaryBtn.addEventListener('click', () => {
+                const newDiary = {
+                    id: appData.nextDiaryId++,
+                    date: new Date().toISOString().split('T')[0],
+                    title: '',
+                    content: '',
+                    isDraft: true
+                };
+                
+                appData.diaries.push(newDiary);
+                appData.currentDiaryId = newDiary.id;
+                saveDataToStorage();
+                loadDiaryEntries();
+                
+                // 清空编辑器
+                diaryDate.value = newDiary.date;
+                diaryTitle.value = '';
+                diaryContent.value = '';
+            });
+            
+            // 保存日记
+            saveDiaryBtn.addEventListener('click', () => {
+                if (!appData.currentDiaryId) {
+                    alert('请选择或创建一篇日记');
+                    return;
+                }
+                
+                const title = diaryTitle.value.trim();
+                const content = diaryContent.value.trim();
+                const date = diaryDate.value;
+                
+                if (!title || !content) {
+                    alert('请填写标题和内容');
+                    return;
+                }
+                
+                const diaryIndex = appData.diaries.findIndex(d => d.id === appData.currentDiaryId);
+                if (diaryIndex !== -1) {
+                    appData.diaries[diaryIndex].title = title;
+                    appData.diaries[diaryIndex].content = content;
+                    appData.diaries[diaryIndex].date = date;
+                    appData.diaries[diaryIndex].isDraft = false;
+                    
+                    saveDataToStorage();
+                    loadDiaryEntries();
+                    alert('日记保存成功！');
+                }
+            });
+            
+            // 保存草稿
+            saveDraftBtn.addEventListener('click', () => {
+                if (!appData.currentDiaryId) {
+                    alert('请选择或创建一篇日记');
+                    return;
+                }
+                
+                const title = diaryTitle.value.trim();
+                const content = diaryContent.value.trim();
+                const date = diaryDate.value;
+                
+                const diaryIndex = appData.diaries.findIndex(d => d.id === appData.currentDiaryId);
+                if (diaryIndex !== -1) {
+                    appData.diaries[diaryIndex].title = title;
+                    appData.diaries[diaryIndex].content = content;
+                    appData.diaries[diaryIndex].date = date;
+                    appData.diaries[diaryIndex].isDraft = true;
+                    
+                    saveDataToStorage();
+                    loadDiaryEntries();
+                    alert('草稿已保存！');
+                }
+            });
+            
+            // 删除日记
+            deleteDiaryBtn.addEventListener('click', () => {
+                if (!appData.currentDiaryId) {
+                    alert('请选择一篇日记');
+                    return;
+                }
+                
+                if (!confirm('确定要删除这篇日记吗？此操作不可撤销。')) {
+                    return;
+                }
+                
+                const diaryIndex = appData.diaries.findIndex(d => d.id === appData.currentDiaryId);
+                if (diaryIndex !== -1) {
+                    appData.diaries.splice(diaryIndex, 1);
+                    
+                    // 重置当前日记ID
+                    appData.currentDiaryId = null;
+                    if (appData.diaries.length > 0) {
+                        appData.currentDiaryId = appData.diaries[0].id;
+                    }
+                    
+                    saveDataToStorage();
+                    loadDiaryEntries();
+                    
+                    // 清空编辑器
+                    diaryDate.value = new Date().toISOString().split('T')[0];
+                    diaryTitle.value = '';
+                    diaryContent.value = '';
+                    
+                    alert('日记已删除！');
+                }
+            });
+            
+            // 初始加载
+            loadDiaryEntries();
+        }
+        
+        // 初始化相册
+        function initGallery() {
+            const albumContainer = document.getElementById('albumContainer');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const photoUpload = document.getElementById('photoUpload');
+            
+            // 加载相册
+            function loadAlbums() {
+                albumContainer.innerHTML = '';
+                
+                appData.galleryAlbums.forEach(album => {
+                    const albumItem = document.createElement('div');
+                    albumItem.className = 'album-item';
+                    
+                    albumItem.innerHTML = `
+                        <div class="album-cover">
+                            <img src="${album.cover}" alt="${album.name}">
+                            <div style="position: absolute; top: 10px; right: 10px;">
+                                <button class="edit-btn edit-album" data-id="${album.id}" title="编辑相册">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn delete-album" data-id="${album.id}" title="删除相册">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="album-info">
+                            <h3>${album.name}</h3>
+                            <p><i class="far fa-images"></i> ${album.photoCount} 张照片</p>
+                        </div>
+                    `;
+                    
+                    albumContainer.appendChild(albumItem);
+                });
+                
+                // 添加事件监听
+                document.querySelectorAll('.edit-album').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const albumId = parseInt(this.dataset.id);
+                        openEditAlbumModal(albumId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-album').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const albumId = parseInt(this.dataset.id);
+                        if (confirm('确定要删除这个相册吗？')) {
+                            deleteAlbum(albumId);
+                        }
+                    });
+                });
+            }
+            
+            // 上传照片
+            uploadBtn.addEventListener('click', () => {
+                photoUpload.click();
+            });
+            
+            photoUpload.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    // 在实际应用中，这里应该上传文件到服务器
+                    // 这里我们模拟上传，将文件转换为Base64
+                    const file = this.files[0];
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const newAlbum = {
+                            id: appData.nextPhotoId++,
+                            name: `新相册 ${appData.galleryAlbums.length + 1}`,
+                            photoCount: 1,
+                            cover: e.target.result
+                        };
+                        
+                        appData.galleryAlbums.push(newAlbum);
+                        saveDataToStorage();
+                        loadAlbums();
+                        alert('相册已创建！');
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // 初始加载
+            loadAlbums();
+        }
+        
+        // 打开编辑相册模态框
+        function openEditAlbumModal(albumId) {
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            const albumIndex = appData.galleryAlbums.findIndex(a => a.id === albumId);
+            if (albumIndex === -1) return;
+            
+            const album = appData.galleryAlbums[albumIndex];
+            
+            modalTitle.textContent = '编辑相册';
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label for="albumName">相册名称</label>
+                    <input type="text" id="albumName" class="form-control" value="${album.name}">
+                </div>
+                <div class="form-group">
+                    <label for="albumPhotoCount">照片数量</label>
+                    <input type="number" id="albumPhotoCount" class="form-control" value="${album.photoCount}" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="albumCover">封面图片URL</label>
+                    <input type="text" id="albumCover" class="form-control" value="${album.cover}">
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelAlbumBtn">取消</button>
+                    <button class="btn btn-primary" id="saveAlbumBtn">保存</button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('saveAlbumBtn').addEventListener('click', function() {
+                const name = document.getElementById('albumName').value.trim();
+                const photoCount = parseInt(document.getElementById('albumPhotoCount').value);
+                const cover = document.getElementById('albumCover').value.trim();
+                
+                if (!name || !cover) {
+                    alert('请填写完整信息');
+                    return;
+                }
+                
+                appData.galleryAlbums[albumIndex] = {
+                    ...album,
+                    name,
+                    photoCount,
+                    cover
+                };
+                
+                saveDataToStorage();
+                initGallery();
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮事件
+            document.getElementById('cancelAlbumBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 删除相册
+        function deleteAlbum(albumId) {
+            appData.galleryAlbums = appData.galleryAlbums.filter(album => album.id !== albumId);
+            saveDataToStorage();
+            initGallery();
+        }
+        
+        // 初始化纪念日
+        function initMilestones() {
+            const milestonesContainer = document.getElementById('milestonesContainer');
+            
+            // 加载纪念日
+            function loadMilestones() {
+                milestonesContainer.innerHTML = '';
+                
+                appData.milestones.forEach(milestone => {
+                    const milestoneCard = document.createElement('div');
+                    milestoneCard.className = 'milestone-card';
+                    milestoneCard.dataset.id = milestone.id;
+                    
+                    const counters = calculateMilestoneCounters(milestone);
+                    
+                    let countersHtml = '';
+                    
+                    // 天数
+                    if (milestone.showDays) {
+                        countersHtml += `
+                            <div class="counter-box">
+                                <div class="counter-label">${milestone.dateType === 'since' ? '已过去' : '还有'}</div>
+                                <div class="counter-value">${counters.days}<span class="counter-unit">天</span></div>
+                            </div>
+                        `;
+                    }
+                    
+                    // 小时
+                    if (milestone.showHours) {
+                        countersHtml += `
+                            <div class="counter-box">
+                                <div class="counter-label">${milestone.dateType === 'since' ? '已过去' : '还有'}</div>
+                                <div class="counter-value">${counters.hours}<span class="counter-unit">小时</span></div>
+                            </div>
+                        `;
+                    }
+                    
+                    // 分钟
+                    if (milestone.showMinutes) {
+                        countersHtml += `
+                            <div class="counter-box">
+                                <div class="counter-label">${milestone.dateType === 'since' ? '已过去' : '还有'}</div>
+                                <div class="counter-value">${counters.minutes}<span class="counter-unit">分钟</span></div>
+                            </div>
+                        `;
+                    }
+                    
+                    milestoneCard.innerHTML = `
+                        <div class="milestone-icon">
+                            <i class="${milestone.icon}"></i>
+                        </div>
+                        <h3 class="milestone-title">${milestone.title}</h3>
+                        <div class="milestone-counters">
+                            ${countersHtml}
+                        </div>
+                        <p class="milestone-date">${milestone.dateType === 'since' ? '从 ' + milestone.targetDate + ' 开始' : '目标日期: ' + milestone.targetDate}</p>
+                        <div style="margin-top: 15px;">
+                            <button class="edit-btn edit-milestone" data-id="${milestone.id}" title="编辑纪念日">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn delete-milestone" data-id="${milestone.id}" title="删除纪念日">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    milestonesContainer.appendChild(milestoneCard);
+                });
+                
+                // 添加事件监听
+                document.querySelectorAll('.edit-milestone').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const milestoneId = parseInt(this.dataset.id);
+                        openEditMilestoneModal(milestoneId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-milestone').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const milestoneId = parseInt(this.dataset.id);
+                        if (confirm('确定要删除这个纪念日吗？')) {
+                            deleteMilestone(milestoneId);
+                        }
+                    });
+                });
+            }
+            
+            // 添加纪念日按钮
+            document.getElementById('add-milestone-btn').addEventListener('click', function() {
+                openEditMilestoneModal(-1);
+            });
+            
+            // 初始加载
+            loadMilestones();
+        }
+        
+        // 计算纪念日计数器
+        function calculateMilestoneCounters(milestone) {
+            const targetDate = new Date(milestone.targetDate);
+            const now = new Date();
+            
+            let diffMs;
+            
+            if (milestone.dateType === 'since') {
+                // 正计时：从目标日期到现在已经过去的时间
+                diffMs = now - targetDate;
+            } else {
+                // 倒计时：从现在到目标日期还有多少时间
+                diffMs = targetDate - now;
+                
+                // 如果目标日期已经过去，计算到下一个周期
+                if (diffMs < 0) {
+                    // 假设是每年重复的纪念日
+                    targetDate.setFullYear(targetDate.getFullYear() + 1);
+                    diffMs = targetDate - now;
+                }
+            }
+            
+            // 确保是正数
+            diffMs = Math.abs(diffMs);
+            
+            // 计算天数、小时、分钟
+            const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            return {
+                days: days,
+                hours: hours,
+                minutes: minutes
+            };
+        }
+        
+        // 更新纪念日计数器
+        function updateMilestoneCounters() {
+            const milestoneCards = document.querySelectorAll('.milestone-card');
+            
+            milestoneCards.forEach(card => {
+                const milestoneId = parseInt(card.dataset.id);
+                const milestone = appData.milestones.find(m => m.id === milestoneId);
+                
+                if (milestone) {
+                    const counters = calculateMilestoneCounters(milestone);
+                    const countersContainer = card.querySelector('.milestone-counters');
+                    
+                    if (countersContainer) {
+                        let countersHtml = '';
+                        
+                        // 天数
+                        if (milestone.showDays) {
+                            countersHtml += `
+                                <div class="counter-box">
+                                    <div class="counter-label">${milestone.dateType === 'since' ? '已过去' : '还有'}</div>
+                                    <div class="counter-value">${counters.days}<span class="counter-unit">天</span></div>
+                                </div>
+                            `;
+                        }
+                        
+                        // 小时
+                        if (milestone.showHours) {
+                            countersHtml += `
+                                <div class="counter-box">
+                                    <div class="counter-label">${milestone.dateType === 'since' ? '已过去' : '还有'}</div>
+                                    <div class="counter-value">${counters.hours}<span class="counter-unit">小时</span></div>
+                                </div>
+                            `;
+                        }
+                        
+                        // 分钟
+                        if (milestone.showMinutes) {
+                            countersHtml += `
+                                <div class="counter-box">
+                                    <div class="counter-label">${milestone.dateType === 'since' ? '已过去' : '还有'}</div>
+                                    <div class="counter-value">${counters.minutes}<span class="counter-unit">分钟</span></div>
+                                </div>
+                            `;
+                        }
+                        
+                        countersContainer.innerHTML = countersHtml;
+                    }
+                }
+            });
+        }
+        
+        // 打开编辑纪念日模态框
+        function openEditMilestoneModal(milestoneId) {
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            const isNew = milestoneId === -1;
+            let milestoneIndex = -1;
+            let milestone = null;
+            
+            if (!isNew) {
+                milestoneIndex = appData.milestones.findIndex(m => m.id === milestoneId);
+                if (milestoneIndex === -1) return;
+                milestone = appData.milestones[milestoneIndex];
+            } else {
+                milestone = {
+                    id: appData.nextMilestoneId++,
+                    title: '新纪念日',
+                    dateType: 'since',
+                    targetDate: new Date().toISOString().split('T')[0],
+                    icon: 'fas fa-heart',
+                    showDays: true,
+                    showHours: true,
+                    showMinutes: false
+                };
+            }
+            
+            modalTitle.textContent = isNew ? '添加纪念日' : '编辑纪念日';
+            
+            // 图标选项
+            const iconOptions = [
+                'fas fa-heart', 'fas fa-birthday-cake', 'fas fa-gamepad', 'fas fa-calendar-heart',
+                'fas fa-gift', 'fas fa-ring', 'fas fa-star', 'fas fa-heartbeat', 'fas fa-kiss-wink-heart'
+            ];
+            
+            let iconOptionsHtml = '';
+            iconOptions.forEach(icon => {
+                const selected = icon === milestone.icon ? 'selected' : '';
+                iconOptionsHtml += `<option value="${icon}" ${selected}>${icon}</option>`;
+            });
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label for="milestoneTitle">纪念日标题</label>
+                    <input type="text" id="milestoneTitle" class="form-control" value="${milestone.title}">
+                </div>
+                <div class="form-group">
+                    <label for="milestoneDateType">计时类型</label>
+                    <select id="milestoneDateType" class="form-control">
+                        <option value="since" ${milestone.dateType === 'since' ? 'selected' : ''}>正计时（从某天开始）</option>
+                        <option value="until" ${milestone.dateType === 'until' ? 'selected' : ''}>倒计时（到某天还有）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="milestoneTargetDate">目标日期</label>
+                    <input type="date" id="milestoneTargetDate" class="form-control" value="${milestone.targetDate}">
+                </div>
+                <div class="form-group">
+                    <label for="milestoneIcon">图标</label>
+                    <select id="milestoneIcon" class="form-control">
+                        ${iconOptionsHtml}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>显示选项</label>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="showDays" ${milestone.showDays ? 'checked' : ''}>
+                            显示天数
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="showHours" ${milestone.showHours ? 'checked' : ''}>
+                            显示小时
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="showMinutes" ${milestone.showMinutes ? 'checked' : ''}>
+                            显示分钟
+                        </label>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelMilestoneBtn">取消</button>
+                    <button class="btn btn-primary" id="saveMilestoneBtn">保存</button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('saveMilestoneBtn').addEventListener('click', function() {
+                const title = document.getElementById('milestoneTitle').value.trim();
+                const dateType = document.getElementById('milestoneDateType').value;
+                const targetDate = document.getElementById('milestoneTargetDate').value;
+                const icon = document.getElementById('milestoneIcon').value;
+                const showDays = document.getElementById('showDays').checked;
+                const showHours = document.getElementById('showHours').checked;
+                const showMinutes = document.getElementById('showMinutes').checked;
+                
+                if (!title || !targetDate) {
+                    alert('请填写完整信息');
+                    return;
+                }
+                
+                if (isNew) {
+                    appData.milestones.push({
+                        id: milestone.id,
+                        title,
+                        dateType,
+                        targetDate,
+                        icon,
+                        showDays,
+                        showHours,
+                        showMinutes
+                    });
+                } else {
+                    appData.milestones[milestoneIndex] = {
+                        ...milestone,
+                        title,
+                        dateType,
+                        targetDate,
+                        icon,
+                        showDays,
+                        showHours,
+                        showMinutes
+                    };
+                }
+                
+                saveDataToStorage();
+                initMilestones();
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮事件
+            document.getElementById('cancelMilestoneBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 删除纪念日
+        function deleteMilestone(milestoneId) {
+            appData.milestones = appData.milestones.filter(m => m.id !== milestoneId);
+            saveDataToStorage();
+            initMilestones();
+        }
+        
+        // 初始化模态框
+        function initModals() {
+            const editModal = document.getElementById('editModal');
+            const closeModal = document.getElementById('closeModal');
+            const imageModal = document.getElementById('imageModal');
+            const closeImageModal = document.getElementById('closeImageModal');
+            const cancelImageBtn = document.getElementById('cancelImageBtn');
+            
+            // 关闭编辑模态框
+            closeModal.addEventListener('click', function() {
+                editModal.style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target === editModal) {
+                    editModal.style.display = 'none';
+                }
+                if (event.target === imageModal) {
+                    imageModal.style.display = 'none';
+                }
+                if (event.target === document.getElementById('passwordModal')) {
+                    document.getElementById('passwordModal').style.display = 'none';
+                }
+            });
+            
+            // 关闭图片模态框
+            closeImageModal.addEventListener('click', function() {
+                imageModal.style.display = 'none';
+            });
+            
+            cancelImageBtn.addEventListener('click', function() {
+                imageModal.style.display = 'none';
+            });
+            
+            // 图片保存按钮
+            document.getElementById('saveImageBtn').addEventListener('click', saveImage);
+        }
+        
+        // 打开图片模态框
+        function openImageModal(context, photoId) {
+            const modal = document.getElementById('imageModal');
+            const imageUrl = document.getElementById('imageUrl');
+            const imageTitle = document.getElementById('imageTitle');
+            const imageDescription = document.getElementById('imageDescription');
+            const imageFile = document.getElementById('imageFile');
+            
+            // 重置表单
+            imageUrl.value = '';
+            imageTitle.value = '';
+            imageDescription.value = '';
+            imageFile.value = '';
+            
+            // 设置编辑模式
+            if (photoId) {
+                const photoIndex = appData.homePhotos.findIndex(p => p.id === photoId);
+                if (photoIndex !== -1) {
+                    const photo = appData.homePhotos[photoIndex];
+                    imageUrl.value = photo.url;
+                    imageTitle.value = photo.title;
+                    imageDescription.value = photo.description;
+                }
+            }
+            
+            appData.editingItem = { context, id: photoId };
+            modal.style.display = 'flex';
+        }
+        
+        // 保存图片
+        function saveImage() {
+            const imageUrl = document.getElementById('imageUrl').value.trim();
+            const imageTitle = document.getElementById('imageTitle').value.trim();
+            const imageDescription = document.getElementById('imageDescription').value.trim();
+            const imageFile = document.getElementById('imageFile').files[0];
+            
+            let finalUrl = imageUrl;
+            
+            // 如果有上传文件，优先使用
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    finalUrl = e.target.result;
+                    saveImageData(finalUrl, imageTitle, imageDescription);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                saveImageData(finalUrl, imageTitle, imageDescription);
+            }
+        }
+        
+        // 保存图片数据
+        function saveImageData(url, title, description) {
+            if (!url || !title) {
+                alert('请至少提供图片URL和标题');
+                return;
+            }
+            
+            const { context, id } = appData.editingItem;
+            
+            if (context === 'home') {
+                if (id) {
+                    // 编辑现有照片
+                    const photoIndex = appData.homePhotos.findIndex(p => p.id === id);
+                    if (photoIndex !== -1) {
+                        appData.homePhotos[photoIndex] = {
+                            id,
+                            url,
+                            title,
+                            description
+                        };
+                    }
+                } else {
+                    // 添加新照片
+                    const newPhoto = {
+                        id: appData.nextPhotoId++,
+                        url,
+                        title,
+                        description
+                    };
+                    appData.homePhotos.push(newPhoto);
+                }
+                
+                saveDataToStorage();
+                loadHomePhotos();
+            }
+            
+            // 关闭模态框
+            document.getElementById('imageModal').style.display = 'none';
+        }
+        
+        // 初始化编辑按钮
+        function initEditButtons() {
+            // 编辑网站标题
+            document.getElementById('edit-site-title').addEventListener('click', function() {
+                openTextEditModal('siteTitle', '网站标题', appData.siteTitle, function(value) {
+                    appData.siteTitle = value;
+                    document.getElementById('site-title').textContent = value;
+                    saveDataToStorage();
+                });
+            });
+            
+            // 编辑情侣名称
+            document.getElementById('edit-couple-name').addEventListener('click', function() {
+                openTextEditModal('coupleName', '情侣名称', appData.coupleName, function(value) {
+                    appData.coupleName = value;
+                    document.getElementById('couple-name-text').textContent = value;
+                    // 更新底部的情侣名称
+                    const footerText = appData.footerText.replace(/<span class='heartbeat'>[^<]*<\/span>/, `<span class='heartbeat'>${value.split('的')[0]}</span>`);
+                    appData.footerText = footerText;
+                    document.getElementById('footer-text').innerHTML = footerText;
+                    saveDataToStorage();
+                });
+            });
+            
+            // 编辑首页描述
+            document.getElementById('edit-tagline').addEventListener('click', function() {
+                openTextEditModal('tagline', '首页描述', appData.tagline, function(value) {
+                    appData.tagline = value;
+                    document.getElementById('tagline-text').textContent = value;
+                    saveDataToStorage();
+                });
+            });
+            
+            // 编辑底部文字
+            document.getElementById('edit-footer').addEventListener('click', function() {
+                openFooterEditModal();
+            });
+            
+            // 编辑页面标题按钮
+            document.getElementById('edit-about-her-title').addEventListener('click', function() {
+                openSectionTitleEditModal('about-her-title', '关于她标题');
+            });
+            
+            document.getElementById('edit-diary-title').addEventListener('click', function() {
+                openSectionTitleEditModal('diary-title', '恋爱日记标题');
+            });
+            
+            document.getElementById('edit-gallery-title').addEventListener('click', function() {
+                openSectionTitleEditModal('gallery-title', '甜蜜相册标题');
+            });
+            
+            document.getElementById('edit-milestones-title').addEventListener('click', function() {
+                openSectionTitleEditModal('milestones-title', '纪念日标题');
+            });
+        }
+        
+        // 打开文本编辑模态框
+        function openTextEditModal(field, title, currentValue, callback) {
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = `编辑${title}`;
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label for="editText">${title}</label>
+                    <textarea id="editText" class="form-control" rows="4">${currentValue}</textarea>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelTextBtn">取消</button>
+                    <button class="btn btn-primary" id="saveTextBtn">保存</button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('saveTextBtn').addEventListener('click', function() {
+                const value = document.getElementById('editText').value.trim();
+                if (!value) {
+                    alert('内容不能为空');
+                    return;
+                }
+                
+                callback(value);
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮事件
+            document.getElementById('cancelTextBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 打开底部编辑模态框
+        function openFooterEditModal() {
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = '编辑底部文字';
+            
+            // 从footerText中提取情侣名称
+            const footerText = appData.footerText;
+            const match = footerText.match(/<span class='heartbeat'>([^<]*)<\/span>/);
+            const coupleNameInFooter = match ? match[1] : '芬与萌';
+            const footerTextWithoutName = footerText.replace(/<span class='heartbeat'>[^<]*<\/span>/, '<span class="heartbeat">情侣名称</span>');
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label for="footerText">底部文字</label>
+                    <textarea id="footerText" class="form-control" rows="3">${footerTextWithoutName}</textarea>
+                    <small>使用 <span class="heartbeat">情侣名称</span> 作为占位符</small>
+                </div>
+                <div class="form-group">
+                    <label for="footerCoupleName">情侣名称（显示在底部）</label>
+                    <input type="text" id="footerCoupleName" class="form-control" value="${coupleNameInFooter}">
+                </div>
+                <div class="form-group">
+                    <label for="footerQuote">底部引用语</label>
+                    <textarea id="footerQuote" class="form-control" rows="2">${appData.footerQuote}</textarea>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="cancelFooterBtn">取消</button>
+                    <button class="btn btn-primary" id="saveFooterBtn">保存</button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // 保存按钮事件
+            document.getElementById('saveFooterBtn').addEventListener('click', function() {
+                const footerTextValue = document.getElementById('footerText').value.trim();
+                const footerCoupleName = document.getElementById('footerCoupleName').value.trim();
+                const footerQuote = document.getElementById('footerQuote').value.trim();
+                
+                if (!footerTextValue || !footerCoupleName || !footerQuote) {
+                    alert('请填写完整信息');
+                    return;
+                }
+                
+                const finalFooterText = footerTextValue.replace('情侣名称', footerCoupleName);
+                
+                appData.footerText = finalFooterText;
+                appData.footerQuote = footerQuote;
+                
+                document.getElementById('footer-text').innerHTML = finalFooterText;
+                document.getElementById('footer-quote').textContent = footerQuote;
+                
+                saveDataToStorage();
+                modal.style.display = 'none';
+            });
+            
+            // 取消按钮事件
+            document.getElementById('cancelFooterBtn').addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 打开页面标题编辑模态框
+        function openSectionTitleEditModal(sectionId, title) {
+            const sectionTitleElement = document.querySelector(`#${sectionId.replace('-title', '')} .section-title`);
+            const currentTitle = sectionTitleElement ? sectionTitleElement.textContent.replace('编辑', '').trim() : title;
+            
+            openTextEditModal(sectionId, title, currentTitle, function(value) {
+                if (sectionTitleElement) {
+                    // 移除编辑按钮，然后添加回来
+                    const editButton = sectionTitleElement.querySelector('button');
+                    sectionTitleElement.textContent = value;
+                    if (editButton) {
+                        sectionTitleElement.appendChild(editButton);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
